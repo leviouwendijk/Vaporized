@@ -8,6 +8,18 @@ public struct CaptcherJWTPayload: JWTPayload, Codable, @unchecked Sendable {
     public let maxUsages:   Int
     public let exp:         ExpirationClaim
 
+    public init(
+        hashedToken: String,
+        ipAddress: String,
+        maxUsages: Int,
+        exp: ExpirationClaim
+    ) {
+        self.hashedToken = hashedToken
+        self.ipAddress   = ipAddress
+        self.maxUsages   = maxUsages
+        self.exp         = exp
+    }
+
     public func verify(using signer: JWTSigner) throws {
         try exp.verifyNotExpired()
     }
