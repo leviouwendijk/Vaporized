@@ -1,11 +1,16 @@
 import Surfaces
+import Structures
 import Vapor
 
-// Dataman
+// library: Structures
+extension FieldValue: @retroactive Content { }
+extension JSONValue: @retroactive Content { }
+
+// surface: Dataman
 extension DatamanRequest: @retroactive Content { }
 extension DatamanResponse: @retroactive Content { }
 
-// Captcher
+// surface: Captcher
 extension CaptcherTokenType: @retroactive Content {}
 extension CaptcherOperation: @retroactive Content {}
 extension CaptcherRequest: @retroactive Content {}
