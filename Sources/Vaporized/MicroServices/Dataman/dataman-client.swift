@@ -77,8 +77,8 @@ public extension DatamanClient {
         let maxUses  = try obj["max_usages"]!.intValue
         req.logger.debug("  <- parsed other fields")
 
-        guard let expiresAt = ISO8601DateFormatter().date(from: expStr) else {
-            req.logger.warning("  ← failed to parse date \(expStr)")
+        guard let expiresAt = StandardDateFormatter.postgres.date(from: expStr) else {
+            req.logger.warning("failed to parse expires_at \(expStr)")
             return nil
         }
         req.logger.debug("  <- parsed expiresAt = \(expiresAt)")
@@ -124,11 +124,10 @@ public extension DatamanClient {
     //     let uses     = try obj["usage_count"]!.intValue
     //     let maxUses  = try obj["max_usages"]!.intValue
 
-    //     guard
-    //         let expiresAt = ISO8601DateFormatter().date(from: expStr)
-    //     else {
-    //         return nil
-    //     }
+        // guard let expiresAt = StandardDateFormatter.postgres.date(from: expStr) else {
+        //     req.logger.warning("failed to parse expires_at \(expStr)")
+        //     return nil
+        // }
 
     //     if expiresAt < Date() {
     //         try await invalidateToken(id: id, on: req)
@@ -170,9 +169,8 @@ public extension DatamanClient {
         let uses     = try obj["usage_count"]!.intValue
         let maxUses  = try obj["max_usages"]!.intValue
 
-        guard
-            let expiresAt = ISO8601DateFormatter().date(from: expStr)
-        else {
+        guard let expiresAt = StandardDateFormatter.postgres.date(from: expStr) else {
+            req.logger.warning("failed to parse expires_at \(expStr)")
             return nil
         }
 
