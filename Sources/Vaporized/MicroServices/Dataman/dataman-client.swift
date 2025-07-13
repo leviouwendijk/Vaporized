@@ -41,8 +41,12 @@ public extension DatamanClient {
             fieldTypes: fieldTypes
         ).datamanRequest()
 
+        req.logger.debug("→ FETCH DatamanRequest: \(dmReq)")
+
         let res = try await send(dmReq, on: req)
         guard let obj = try? res.results?.first?.objectValue else { return nil }
+
+        req.logger.debug("← FETCH response raw JSON: \(res)")
 
         let id       = try obj["id"]!.intValue
         let hashed   = try obj["hashed_token"]!.stringValue
