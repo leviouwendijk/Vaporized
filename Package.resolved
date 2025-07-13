@@ -142,7 +142,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "bb52feb67a350b00d7a6e598ec414e42b22325cc"
+        "revision" : "9a5c95359fd045c36661cbb0d453dccdab24ce5f"
       }
     },
     {
@@ -151,7 +151,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "4ea94fa3930c506a27d15cc2deed7accc964d8b2"
+        "revision" : "f0692c0395fed04d0c4848f8469db9b06ae68b10"
       }
     },
     {
