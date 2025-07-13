@@ -44,14 +44,13 @@ public extension DatamanClient {
         let res = try await send(dmReq, on: req)
         guard let obj = try? res.results?.first?.objectValue else { return nil }
 
-        let idStr    = try obj["id"]!.stringValue
+        let id       = try obj["id"]!.intValue
         let hashed   = try obj["hashed_token"]!.stringValue
         let expStr   = try obj["expires_at"]!.stringValue
         let uses     = try obj["usage_count"]!.intValue
         let maxUses  = try obj["max_usages"]!.intValue
 
         guard
-            let id        = UUID(uuidString: idStr),
             let expiresAt = ISO8601DateFormatter().date(from: expStr)
         else {
             return nil
@@ -92,13 +91,12 @@ public extension DatamanClient {
         let res = try await send(dmReq, on: req)
         guard let obj = try? res.results?.first?.objectValue else { return nil }
 
-        let idStr    = try obj["id"]!.stringValue
+        let id       = try obj["id"]!.intValue
         let expStr   = try obj["expires_at"]!.stringValue
         let uses     = try obj["usage_count"]!.intValue
         let maxUses  = try obj["max_usages"]!.intValue
 
         guard
-            let id        = UUID(uuidString: idStr),
             let expiresAt = ISO8601DateFormatter().date(from: expStr)
         else {
             return nil
@@ -144,30 +142,30 @@ public extension DatamanClient {
         _ = try await send(dr, on: req)
     }
 
-    func invalidateToken(id: UUID, on req: Request) async throws {
+    func invalidateToken(id: Int, on req: Request) async throws {
         let dr = DatamanRequest(
             operation: .update,
             database:  "tokens",
             table:     "captcha_tokens",
-            criteria:  .object(["id": .string(id.uuidString)]),
+            criteria:  .object(["id": .int(id)]),
             values:    .object(["invalidated": .bool(true)]),
             fieldTypes: [
-                "id":          .uuid,
+                "id":          .integer,
                 "invalidated": .boolean
             ]
         )
         _ = try await send(dr, on: req)
     }
 
-    func incrementUsage(id: UUID, on req: Request) async throws {
+    func incrementUsage(id: Int, on req: Request) async throws {
         let dr = DatamanRequest(
             operation: .update,
             database:  "tokens",
             table:     "captcha_tokens",
-            criteria:  .object(["id": .string(id.uuidString)]),
+            criteria:  .object(["id": .int(id)]),
             values:    .object(["usage_count": .int(1)]),
             fieldTypes: [
-                "id":          .uuid,
+                "id":          .integer,
                 "usage_count": .integer
             ]
         )
