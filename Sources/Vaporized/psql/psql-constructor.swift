@@ -7,14 +7,49 @@ import Surfaces
 public struct PSQLQueryConstructor { }
 
 extension PSQLQueryConstructor {
+    // public static func selectQuery(from request: DatamanRequest) -> PSQLQuery {
+    //     let (whereSQL, params) = buildWhereClause(from: request)
+    //     let limit = request.limit.map { "LIMIT \($0)" } ?? ""
+    //     let sql = """
+    //     SELECT row_to_json(t) AS json_row
+    //       FROM \(request.table) t
+    //     \(whereSQL)
+    //     \(limit);
+    //     """
+    //     return PSQLQuery(sql: sql, parameters: params)
+    // }
+
     public static func selectQuery(from request: DatamanRequest) -> PSQLQuery {
         let (whereSQL, params) = buildWhereClause(from: request)
-        let limit = request.limit.map { "LIMIT \($0)" } ?? ""
+
+        let orderSQL: String
+        if let orderJSON = request.order {
+            if let rawOrder = try? orderJSON.objectValue {
+                let parts: [String] = rawOrder.compactMap { column, direction in
+                    guard let dir = try? direction.stringValue else {
+                        return nil
+                    }
+                    return "\(column) \(dir.uppercased())"
+                }
+                let joined = parts.joined(separator: ", ")
+                orderSQL = joined.isEmpty
+                  ? ""
+                  : "ORDER BY \(joined)"
+            } else {
+                orderSQL = ""
+            }
+        } else {
+            orderSQL = ""
+        }
+
+        let limitSQL = request.limit.map { "LIMIT \($0)" } ?? ""
+
         let sql = """
         SELECT row_to_json(t) AS json_row
           FROM \(request.table) t
         \(whereSQL)
-        \(limit);
+        \(orderSQL)
+        \(limitSQL);
         """
         return PSQLQuery(sql: sql, parameters: params)
     }
