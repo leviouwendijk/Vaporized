@@ -1,4 +1,5 @@
 import Surfaces
+import Interfaces
 import Vapor
 
 public struct DatamanClient: Sendable {
@@ -23,3 +24,4 @@ public struct DatamanClient: Sendable {
         return try response.content.decode(DatamanResponse.self)
     }
 }
+
