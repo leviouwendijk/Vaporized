@@ -3,6 +3,7 @@ import AsyncKit
 import PostgresKit
 import Vapor
 import Surfaces
+import Interfaces
 import Structures
 
 @preconcurrency
@@ -34,6 +35,10 @@ public final class DatamanExecutor: DatamanDatabaseExecutor {
         pool: EventLoopGroupConnectionPool<PostgresConnectionSource>
     ) async throws -> DatamanResponse {
         let query = PSQLQueryConstructor.selectQuery(from: request)
+            
+        let debugger = try StandardLogger(for: "Debugging")
+        debugger.debug("[SQL] \(query.sql) -- \(query.parameters)")
+
         let rows: [PostgresRow] = try await withCheckedThrowingContinuation { cont in
             pool.withConnection { conn in
                 conn.query(query.sql, query.parameters).map(\.rows)

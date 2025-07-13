@@ -30,6 +30,8 @@ public struct DatamanClient: Sendable {
 
 public extension DatamanClient {
     func fetchValidTokensTokenRow(ip: String, on req: Request) async throws -> TokensTokenRow? {
+        req.logger.debug("Captcher fetching token for IP \(ip)")
+
         let table = "captcha_tokens"
         let fieldTypes = try PSQLFieldTypeRegistry.table(named: table)
 
