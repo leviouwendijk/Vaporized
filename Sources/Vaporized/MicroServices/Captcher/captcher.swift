@@ -4,7 +4,7 @@ import JWTKit
 import Interfaces
 import Surfaces
 
-public struct Captcher {
+public struct Captcher: @unchecked Sendable {
     private let dataman: DatamanClient
     private let signer:  JWTSigner
     private let verifier: JWTSigner
