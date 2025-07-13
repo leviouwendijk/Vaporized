@@ -11,3 +11,4 @@ extension CaptcherOperation: @retroactive Content {}
 extension CaptcherRequest: @retroactive Content {}
 extension CaptcherResponse: @retroactive Content {}
 extension CaptcherValidationResult: @retroactive Content {}
+extension CaptcherValidateBody: @retroactive Content {}
