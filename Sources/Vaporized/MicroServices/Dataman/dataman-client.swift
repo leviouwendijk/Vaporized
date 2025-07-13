@@ -1,7 +1,7 @@
 import Surfaces
 import Vapor
 
-public struct DatamanClient {
+public struct DatamanClient: Sendable {
     public let baseURL: URI
     private let client: Client
 
