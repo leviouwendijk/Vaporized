@@ -1,4 +1,5 @@
 import Vapor
+import NIO
 import Structures
 
 public struct DatamanManagerKey: StorageKey {
@@ -14,5 +15,12 @@ public extension Application {
             return mgr
         }
         set { self.storage[DatamanManagerKey.self] = newValue }
+    }
+}
+
+struct DatamanPoolShutdown: LifecycleHandler {
+    let pool: DatamanPool
+    func shutdown(_ application: Application) {
+        pool.shutdown()
     }
 }
