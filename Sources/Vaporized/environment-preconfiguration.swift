@@ -21,8 +21,7 @@ where K: EnvironmentPreconfigurationKeyProtocol
         self.keys = keys
         self.storage = [:]
 
-        let validated = try validate()
-        self.storage = validated
+        self.storage = try validate()
         try store()
     }
 
