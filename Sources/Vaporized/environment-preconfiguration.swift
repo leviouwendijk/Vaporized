@@ -46,16 +46,15 @@ where K: EnvironmentPreconfigurationKeyProtocol
         app.storage[EnvironmentPreconfigurationKey<K>.self] = cfg
     }
 
-    public func string(_ key: K) -> String {
+    public func value(_ key: K) -> String {
         storage[key]!
     }
 }
 
 extension Application {
-    public func environmentPreconfiguration<K>(
+    public func preconfiguration<K>(
         _ type: K.Type
-    ) -> EnvironmentPreconfiguration<K>
-    where K: EnvironmentPreconfigurationKeyProtocol
+    ) -> EnvironmentPreconfiguration<K> where K: EnvironmentPreconfigurationKeyProtocol
     {
         guard let cfg = storage[EnvironmentPreconfigurationKey<K>.self] else {
             fatalError("""
