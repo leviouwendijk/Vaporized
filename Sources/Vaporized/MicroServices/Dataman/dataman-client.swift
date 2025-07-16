@@ -8,18 +8,20 @@ import plate
 public struct DatamanClient: Sendable {
     public let baseURL: URI
     private let client: Client
+    private let authorization: APIAuthorzationMethod
 
-    public init(baseURL: URI, client: Client) {
+    public init(baseURL: URI, client: Client, authorization: APIAuthorzationMethod) {
         self.baseURL = baseURL
         self.client = client
+        self.authorization = authorization
     }
 
     public func send(
         _ datamanRequest: DatamanRequest,
-        on req: Request,
-        // apiKey: 
+        on req: Request
     ) async throws -> DatamanResponse {
         let response = try await client.post(baseURL) { post in
+            post.headers.add(contentsOf: authorization.headers())
             try post.content.encode(datamanRequest, as: .json)
         }
         guard (200..<300).contains(response.status.code) else {

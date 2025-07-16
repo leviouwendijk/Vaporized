@@ -3,8 +3,25 @@ import Interfaces
 import Surfaces
 import Vapor
 
-public enum APIKeyStyleError: Error, LocalizedError {
-    case invalidHeaderName
+public struct APIAuthorzationMethod: Sendable {
+    public let style: APIKeyStyle
+    public let token: String
+    
+    public init(
+        style: APIKeyStyle,
+        token: String
+    ) {
+        self.style = style
+        self.token = token
+    }
+
+    public func headers() -> HTTPHeaders {
+        var headers = HTTPHeaders()
+        let headerName = style.headerName
+        let headerValue = style.headerValue(for: token)
+        headers.replaceOrAdd(name: headerName, value: headerValue)
+        return headers
+    }
 }
 
 public enum APIKeyStyle: String, CaseIterable, Sendable {
@@ -16,7 +33,7 @@ public enum APIKeyStyle: String, CaseIterable, Sendable {
     case Api_Key               = "Api-Key"
     case authorizationBearer   = "Authorization" 
 
-    public var headerName: HTTPHeaders.Name? {
+    public var headerName: HTTPHeaders.Name {
         switch self {
         case .authorizationBearer:
             return .authorization
@@ -25,35 +42,18 @@ public enum APIKeyStyle: String, CaseIterable, Sendable {
         }
     }
 
-    // public func bearerValue(apiKey: String) -> String {
-    //     return "Bearer \(apiKey)"
-    // }
+    public func bearerValue(apiKey: String) -> String {
+        return "Bearer \(apiKey)"
+    }
 
-    // public func headerValue(for apiKey: String) -> String {
-    //     switch self {
-    //     case .authorizationBearer:
-    //         return bearerValue(apiKey: apiKey)
-    //     default:
-    //         return apiKey
-    //     }
-    // }
-
-    // public func headerTuple(for apiKey: String) throws -> (name: HTTPHeaders.Name, value: String) {
-    //     guard let name = headerName else { throw APIKeyStyleError.invalidHeaderName }
-    //     return (name, headerValue(for: apiKey))
-    // }
-
-    // public func headers(for apiKey: String) throws -> HTTPHeaders {
-    //     var headers = HTTPHeaders()
-    //     let (name, value) = try headerTuple(for: apiKey)
-    //     headers.add(name: name, value: value)
-    //     return headers
-    // }
-
-    // public static func authorization(bearer: String) throws -> HTTPHeaders {
-    //     let s = Self.self.authorizationBearer
-    //     return try s.headers(for: bearer)
-    // }
+    public func headerValue(for apiKey: String) -> String {
+        switch self {
+        case .authorizationBearer:
+            return bearerValue(apiKey: apiKey)
+        default:
+            return apiKey
+        }
+    }
 
     public static func authorization(bearer token: String) -> HTTPHeaders {
         var headers = HTTPHeaders()

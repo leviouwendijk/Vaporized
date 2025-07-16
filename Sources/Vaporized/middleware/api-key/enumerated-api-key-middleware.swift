@@ -23,10 +23,9 @@ public struct EnumeratedAPIKeyMiddleware: Middleware, Sendable {
         let presented: String?
         if style == .authorizationBearer {
             presented = request.headers.bearerAuthorization?.token
-        } else if let header = style.headerName {
-            presented = request.headers.first(name: header)
         } else {
-            presented = nil
+            let header = style.headerName
+            presented = request.headers.first(name: header)
         }
         guard let key = presented, key == expectedKey else {
             logger.warn("APIKeyMiddleware: missing/invalid key via '\(style.rawValue)' style")
