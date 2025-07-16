@@ -16,7 +16,8 @@ public struct DatamanClient: Sendable {
 
     public func send(
         _ datamanRequest: DatamanRequest,
-        on req: Request
+        on req: Request,
+        // apiKey: 
     ) async throws -> DatamanResponse {
         let response = try await client.post(baseURL) { post in
             try post.content.encode(datamanRequest, as: .json)

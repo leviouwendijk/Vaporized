@@ -3,28 +3,12 @@ import Interfaces
 import Surfaces
 import Vapor
 
-public enum APIKeyHeaderStyle: String, CaseIterable, Sendable {
-    case XAPIKEY             = "X-API-KEY"
-    case xapikey             = "x-api-key"
-    case XApiKey             = "X-Api-Key"
-    case authorizationBearer = "Authorization"  // for “Bearer <token>”
-
-    public var headerName: HTTPHeaders.Name? {
-        switch self {
-        case .authorizationBearer:
-            return .authorization
-        default:
-            return HTTPHeaders.Name(self.rawValue)
-        }
-    }
-}
-
 public struct EnumeratedAPIKeyMiddleware: Middleware, Sendable {
-    let style: APIKeyHeaderStyle
+    let style: APIKeyStyle
     let expectedKey: String
 
     public init(
-        style: APIKeyHeaderStyle = .XApiKey,
+        style: APIKeyStyle = .authorizationBearer,
         expectedKey: String
     ) {
         self.style = style
