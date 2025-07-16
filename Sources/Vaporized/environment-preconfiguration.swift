@@ -53,9 +53,8 @@ where K: EnvironmentPreconfigurationKeyProtocol
 
 extension Application {
     public func preconfiguration<K>(
-        _ type: K.Type
-    ) -> EnvironmentPreconfiguration<K> where K: EnvironmentPreconfigurationKeyProtocol
-    {
+        load type: K.Type
+    ) -> EnvironmentPreconfiguration<K> where K: EnvironmentPreconfigurationKeyProtocol {
         guard let cfg = storage[EnvironmentPreconfigurationKey<K>.self] else {
             fatalError("""
                 EnvironmentPreconfiguration<\(K.self)> not initialized; \
@@ -63,6 +62,13 @@ extension Application {
             """)
         }
         return cfg
+    }
+
+    public func preconfigureEnvironment<K>(
+        using type: K.Type,
+        keys: [K] = Array(K.allCases)
+    ) throws where K: EnvironmentPreconfigurationKeyProtocol {
+        _ = try EnvironmentPreconfiguration<K>(app: self, keys: keys)
     }
 }
 
