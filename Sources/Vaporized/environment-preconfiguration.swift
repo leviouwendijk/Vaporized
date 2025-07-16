@@ -22,7 +22,8 @@ where K: EnvironmentPreconfigurationKeyProtocol
         self.storage = [:]
 
         self.storage = try validate()
-        try store()
+        // try store() // this is recursive because init -> store() -> init -> store() ...
+        app.storage[EnvironmentPreconfigurationKey<K>.self] = self
     }
 
     public init(app: Application) throws {
