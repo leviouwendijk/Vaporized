@@ -21,7 +21,8 @@ public struct DatamanClient: Sendable {
         on req: Request
     ) async throws -> DatamanResponse {
         let response = try await client.post(baseURL) { post in
-            post.headers.add(contentsOf: authorization.headers())
+            let headers = authorization.headers() 
+            post.headers.add(contentsOf: headers)
             try post.content.encode(datamanRequest, as: .json)
         }
         guard (200..<300).contains(response.status.code) else {
