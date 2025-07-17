@@ -4,7 +4,7 @@ import Surfaces
 import Interfaces
 import plate
 
-public enum TemplaterTemplateRenderingError: Error, LocalizedError {
+public enum TemplaterTemplateRenderingError: Error, LocalizedError, Sendable {
     case unsupportedReturnType(template: String, type: String)
     case missingPlaceholder(name: String)
     case invalidPlaceholderType(name: String, expected: TemplaterPlaceholderType, actual: JSONValue)
@@ -24,7 +24,7 @@ public enum TemplaterTemplateRenderingError: Error, LocalizedError {
     }
 }
 
-public struct TemplaterTemplateRenderer {
+public struct TemplaterTemplateRenderer: Sendable {
     private let provider:      TemplaterTemplateProviding
     private let configLoader:  TemplaterConfigurationLoading
     private let pdfRenderer:   PDFRenderable
