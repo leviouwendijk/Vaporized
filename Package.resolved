@@ -97,7 +97,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "ffe228430af40bc109ad531d2ede4c0e97aa0a0d"
+        "revision" : "be465cea1f62a95dc4781b67366c42e81b125637"
       }
     },
     {
@@ -151,7 +151,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "606a2d5c6e61b14c0938823a24bf724deeb794d5"
+        "revision" : "c174bcbeaba52c943c7be85c52fe64d591dfa558"
       }
     },
     {

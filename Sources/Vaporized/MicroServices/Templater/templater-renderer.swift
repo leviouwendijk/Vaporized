@@ -8,7 +8,7 @@ public enum TemplaterTemplateRenderingError: Error, LocalizedError, Sendable {
     case unsupportedReturnType(template: String, type: String)
     case missingPlaceholder(name: String)
     case invalidPlaceholderType(name: String, expected: TemplaterPlaceholderType, actual: JSONValue)
-    case unresolvedPlaceholders([String])
+    case unresolvedPlaceholders(raw: [String], place: String)
     
     public var errorDescription: String? {
         switch self {
@@ -18,8 +18,8 @@ public enum TemplaterTemplateRenderingError: Error, LocalizedError, Sendable {
             return "Required placeholder '\(name)' was not provided."
         case .invalidPlaceholderType(let name, let expected, let actual):
             return "Placeholder '\(name)' expected type \(expected.rawValue), but got \(actual)."
-        case .unresolvedPlaceholders(let list):
-            return "Unresolved placeholders still in template: \(list.joined(separator: ", "))."
+        case .unresolvedPlaceholders(let raw, let place):
+            return "Unresolved placeholders still in \(place): \(raw.joined(separator: ", "))."
         }
     }
 }
@@ -29,17 +29,20 @@ public struct TemplaterTemplateRenderer: Sendable {
     private let configLoader:  TemplaterConfigurationLoading
     private let pdfRenderer:   PDFRenderable
     private let placeholderSyntax: PlaceholderSyntax
+    private let resourcesURL: URL
 
     public init(
-      provider:           TemplaterTemplateProviding,
-      configLoader:       TemplaterConfigurationLoading,
-      pdfRenderer:        PDFRenderable = WeasyPrintRenderer(),
-      placeholderSyntax:  PlaceholderSyntax = PlaceholderSyntax(prepending: "{{", appending: "}}")
+        provider:           TemplaterTemplateProviding,
+        configLoader:       TemplaterConfigurationLoading,
+        pdfRenderer:        PDFRenderable = WeasyPrintRenderer(),
+        placeholderSyntax:  PlaceholderSyntax = PlaceholderSyntax(prepending: "{{", appending: "}}"),
+        resourcesURL: URL
     ) {
         self.provider          = provider
         self.configLoader      = configLoader
         self.pdfRenderer       = pdfRenderer
         self.placeholderSyntax = placeholderSyntax
+        self.resourcesURL = resourcesURL
     }
 
     public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
@@ -93,16 +96,44 @@ public struct TemplaterTemplateRenderer: Sendable {
                 )
             }
 
+            let subject: String?
+            if let templateSubject = cfg.subject {
+                subject = StringTemplateConverter(
+                    text:         templateSubject,
+                    replacements: replacements
+                ).replace(replaceEmpties: false)
+            } else {
+                subject = nil
+            }
+
+            if let newSub = subject {
+                let rawSubjectPlaceholders = newSub.extractingRawTemplatePlaceholderSyntaxes()
+                if !rawSubjectPlaceholders.isEmpty {
+                    throw TemplaterTemplateRenderingError.unresolvedPlaceholders(raw: rawSubjectPlaceholders, place: "subject")
+                }
+            }
+
             let converter = StringTemplateConverter(
                 text:         raw,
                 replacements: replacements
             )
-
             let filled = converter.replace(replaceEmpties: false)
 
-            let rawPlaceholders = filled.extractingRawTemplatePlaceholderSyntaxes()
+            let styled = try injectCSS(
+                into: filled,
+                platform: path.platform,
+                resources: resourcesURL
+            )
+
+            let imageDir = resourcesURL.appendingPathComponent("Images")
+            let rendered = embedImages(
+                in: styled, 
+                imageDir: imageDir
+            )
+
+            let rawPlaceholders = rendered.extractingRawTemplatePlaceholderSyntaxes()
             if !rawPlaceholders.isEmpty {
-                throw TemplaterTemplateRenderingError.unresolvedPlaceholders(rawPlaceholders)
+                throw TemplaterTemplateRenderingError.unresolvedPlaceholders(raw: rawPlaceholders, place: "template text")
             }
 
             var textOutput: String?
@@ -111,11 +142,11 @@ public struct TemplaterTemplateRenderer: Sendable {
 
             switch request.returning {
             case .html:
-                htmlOutput = filled
+                htmlOutput = rendered
             case .pdf:
                 let pdfDest = NSTemporaryDirectory() + UUID().uuidString + ".pdf"
 
-                try filled.weasyPDF(
+                try rendered.weasyPDF(
                     destination: pdfDest,
                     encoding: .utf8
                 )
@@ -123,15 +154,16 @@ public struct TemplaterTemplateRenderer: Sendable {
                 let pdfData = try Data(contentsOf: URL(fileURLWithPath: pdfDest))
                 base64Output = pdfData.base64EncodedString()
             default:
-                textOutput = filled
+                textOutput = rendered
             }
 
             if base64Output == nil {
-                base64Output = Data(filled.utf8).base64EncodedString()
+                base64Output = Data(rendered.utf8).base64EncodedString()
             }
 
             return TemplaterRenderResponse(
                 success: true,
+                subject: subject,
                 text:   textOutput,
                 html:   htmlOutput,
                 base64: base64Output,
@@ -140,6 +172,7 @@ public struct TemplaterTemplateRenderer: Sendable {
         } catch {
             return TemplaterRenderResponse(
                 success: false,
+                subject: nil,
                 text:   nil,
                 html:   nil,
                 base64: nil,
