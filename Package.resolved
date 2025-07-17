@@ -34,7 +34,7 @@
       "location" : "https://github.com/leviouwendijk/Extensions.git",
       "state" : {
         "branch" : "master",
-        "revision" : "c85d85fb250694fcb294a4cb8f85d8da1252feb0"
+        "revision" : "931a395a221f99f02166bb8076fcb4163e50cd7e"
       }
     },
     {
@@ -70,7 +70,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "af5e65a4ed9b3f9a10574b35d2726d351b6e706b"
+        "revision" : "832b72554adb47421f41a450c984cd1b0914da41"
       }
     },
     {
@@ -97,7 +97,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "4573c736d1d57aa84aee65128b43779cc103d31c"
+        "revision" : "b3375a88ba061efa57f21b05efecce94dfa474f3"
       }
     },
     {
@@ -142,7 +142,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2411e162149e141aa29be4803235a444129d0818"
+        "revision" : "626ff3814daac0dfb000651d7112c289e5b8be4e"
       }
     },
     {
@@ -151,7 +151,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "430ebb22b16d79a06983c6280c2ae966e5cbda9e"
+        "revision" : "0af35bbe44798f7fb18f62dda1adc62243c4fd74"
       }
     },
     {
@@ -348,8 +348,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/vapor.git",
       "state" : {
-        "revision" : "4014016aad591a120f244f9b9e8a57252b7e62b4",
-        "version" : "4.115.0"
+        "revision" : "3636f443474769147828a5863e81a31f6f30e92c",
+        "version" : "4.115.1"
       }
     },
     {
