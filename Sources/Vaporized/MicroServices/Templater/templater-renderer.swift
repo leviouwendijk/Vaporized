@@ -44,7 +44,7 @@ public struct TemplaterTemplateRenderer: Sendable {
 
     public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
         let path  = request.template
-        let tplId = path.fileName
+        let tplId = path.basePath
 
         do {
             let cfg = try configLoader.loadConfig(for: path)
