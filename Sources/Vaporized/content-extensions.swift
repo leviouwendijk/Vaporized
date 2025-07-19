@@ -20,7 +20,8 @@ extension CaptcherValidationResult: @retroactive Content {}
 extension CaptcherValidateBody: @retroactive Content {}
 
 // surface: Templater
-extension TemplaterDesignation: @retroactive Content { }
+extension TemplaterUseDesignation: @retroactive Content { }
+extension TemplaterSection:   @retroactive Content { }
 extension TemplaterPlatform:   @retroactive Content { }
 extension TemplaterGroup:      @retroactive Content { }
 extension TemplaterType:       @retroactive Content { }

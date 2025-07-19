@@ -164,6 +164,7 @@ public struct TemplaterTemplateRenderer: Sendable {
             return TemplaterRenderResponse(
                 success: true,
                 subject: subject,
+                use: cfg.use,
                 text:   textOutput,
                 html:   htmlOutput,
                 base64: base64Output,
@@ -173,6 +174,7 @@ public struct TemplaterTemplateRenderer: Sendable {
             return TemplaterRenderResponse(
                 success: false,
                 subject: nil,
+                use:    nil,
                 text:   nil,
                 html:   nil,
                 base64: nil,
