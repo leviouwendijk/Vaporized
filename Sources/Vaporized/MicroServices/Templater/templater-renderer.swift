@@ -213,8 +213,6 @@ public struct TemplaterTemplateRenderer: Sendable {
         }
     }
 
-    // MARK: – Helpers
-
     private func loadAndValidateConfig(_ request: TemplaterRenderRequest) throws -> TemplaterTemplateConfiguration {
         let cfg = try configLoader.loadConfig(for: request.template)
         guard cfg.allowedReturnTypes?.contains(request.returning) ?? true else {
@@ -229,12 +227,34 @@ public struct TemplaterTemplateRenderer: Sendable {
     ) throws -> (vars: [String: JSONValue], reps: [StringTemplateReplacement]) {
         var reps: [StringTemplateReplacement] = []
         let vars = variables
+
         for spec in config.placeholders.provided {
-            // validate existence & type… then
-            let token = placeholderSyntax.set(for: spec.placeholder)
-            let literal = try variables[spec.placeholder]?.stringValue ?? ""
-            reps.append(.init(placeholders: [token], replacement: literal, initializer: .manual, placeholderSyntax: placeholderSyntax))
+            let name = spec.placeholder
+            guard let value = vars[name] else {
+                if spec.required {
+                    throw TemplaterTemplateRenderingError.missingPlaceholder(name: name)
+                }
+                continue
+            }
+
+            switch value {
+            case .string, .int, .double, .bool:
+                let token   = placeholderSyntax.set(for: name)
+                let literal = try value.stringValue
+                reps.append(
+                  StringTemplateReplacement(
+                    placeholders:     [token],
+                    replacement:      literal,
+                    initializer:      .manual,
+                    placeholderSyntax: placeholderSyntax
+                  )
+                )
+            default:
+                // arrays/objects/null: leave in `vars` for dynamic rendering
+                break
+            }
         }
+
         return (vars, reps)
     }
 
