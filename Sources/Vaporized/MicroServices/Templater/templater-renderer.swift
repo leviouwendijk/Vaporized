@@ -27,6 +27,7 @@ public enum TemplaterTemplateRenderingError: Error, LocalizedError, Sendable {
 public struct TemplaterTemplateRenderer: Sendable {
     private let provider:      TemplaterTemplateProviding
     private let configLoader:  TemplaterConfigurationLoading
+    private let imageProvider:      TemplaterImageProviding
     private let pdfRenderer:   PDFRenderable
     private let placeholderSyntax: PlaceholderSyntax
     private let resourcesURL: URL
@@ -34,178 +35,44 @@ public struct TemplaterTemplateRenderer: Sendable {
     public init(
         provider:           TemplaterTemplateProviding,
         configLoader:       TemplaterConfigurationLoading,
+        imageProvider:      TemplaterImageProvider,
         pdfRenderer:        PDFRenderable = WeasyPrintRenderer(),
         placeholderSyntax:  PlaceholderSyntax = PlaceholderSyntax(prepending: "{{", appending: "}}"),
         resourcesURL: URL
     ) {
         self.provider          = provider
         self.configLoader      = configLoader
+        self.imageProvider     = imageProvider
         self.pdfRenderer       = pdfRenderer
         self.placeholderSyntax = placeholderSyntax
         self.resourcesURL = resourcesURL
     }
 
-    // public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
-    //     let path  = request.template
-    //     let tplId = path.basePath
-
-    //     do {
-    //         let cfg = try configLoader.loadConfig(for: path)
-
-    //         if let allowed = cfg.allowedReturnTypes,
-    //             !allowed.contains(request.returning) {
-    //                 throw TemplaterTemplateRenderingError.unsupportedReturnType(
-    //                     template: tplId,
-    //                     type: request.returning.rawValue
-    //                 )
-    //         }
-
-    //         if let specs = cfg.placeholders {
-    //             for spec in specs where spec.required {
-    //                 guard let value = request.variables[spec.placeholder] else {
-    //                     throw TemplaterTemplateRenderingError.missingPlaceholder(name: spec.placeholder)
-    //                 }
-    //                 if let expected = spec.type {
-    //                     switch (expected, value) {
-    //                     case (.integer, .int),
-    //                          (.double,  .double),
-    //                          (.string,  .string),
-    //                          (.object,  .object):
-    //                         break
-    //                     default:
-    //                         throw TemplaterTemplateRenderingError.invalidPlaceholderType(
-    //                           name: spec.placeholder,
-    //                           expected: expected,
-    //                           actual: value
-    //                         )
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         let raw = try provider.fetchTemplate(at: path)
-
-    //         let replacements = request.variables.map { key, jsonValue -> StringTemplateReplacement in
-    //             let placeholder = placeholderSyntax.set(for: key)
-    //             let valueString = (try? jsonValue.stringValue) ?? ""
-    //             return StringTemplateReplacement(
-    //                 placeholders: [placeholder],
-    //                 replacement:  valueString,
-    //                 initializer:  .manual,
-    //                 placeholderSyntax: placeholderSyntax
-    //             )
-    //         }
-
-    //         let subject: String?
-    //         if let templateSubject = cfg.subject {
-    //             subject = StringTemplateConverter(
-    //                 text:         templateSubject,
-    //                 replacements: replacements
-    //             ).replace(replaceEmpties: false)
-    //         } else {
-    //             subject = nil
-    //         }
-
-    //         if let newSub = subject {
-    //             let rawSubjectPlaceholders = newSub.extractingRawTemplatePlaceholderSyntaxes()
-    //             if !rawSubjectPlaceholders.isEmpty {
-    //                 throw TemplaterTemplateRenderingError.unresolvedPlaceholders(raw: rawSubjectPlaceholders, place: "subject")
-    //             }
-    //         }
-
-    //         let converter = StringTemplateConverter(
-    //             text:         raw,
-    //             replacements: replacements
-    //         )
-    //         let filled = converter.replace(replaceEmpties: false)
-
-    //         let styled = try injectCSS(
-    //             into: filled,
-    //             platform: path.platform,
-    //             resources: resourcesURL
-    //         )
-
-    //         let imageDir = resourcesURL.appendingPathComponent("Images")
-    //         let rendered = embedImages(
-    //             in: styled, 
-    //             imageDir: imageDir
-    //         )
-
-    //         let rawPlaceholders = rendered.extractingRawTemplatePlaceholderSyntaxes()
-    //         if !rawPlaceholders.isEmpty {
-    //             throw TemplaterTemplateRenderingError.unresolvedPlaceholders(raw: rawPlaceholders, place: "template text")
-    //         }
-
-    //         var textOutput: String?
-    //         var htmlOutput: String?
-    //         var base64Output: String?
-
-    //         switch request.returning {
-    //         case .html:
-    //             htmlOutput = rendered
-    //         case .pdf:
-    //             let pdfDest = NSTemporaryDirectory() + UUID().uuidString + ".pdf"
-
-    //             try rendered.weasyPDF(
-    //                 destination: pdfDest,
-    //                 encoding: .utf8
-    //             )
-
-    //             let pdfData = try Data(contentsOf: URL(fileURLWithPath: pdfDest))
-    //             base64Output = pdfData.base64EncodedString()
-    //         default:
-    //             textOutput = rendered
-    //         }
-
-    //         if base64Output == nil {
-    //             base64Output = Data(rendered.utf8).base64EncodedString()
-    //         }
-
-    //         return TemplaterRenderResponse(
-    //             success: true,
-    //             subject: subject,
-    //             use: cfg.use,
-    //             text:   textOutput,
-    //             html:   htmlOutput,
-    //             base64: base64Output,
-    //             error:  nil
-    //         )
-    //     } catch {
-    //         return TemplaterRenderResponse(
-    //             success: false,
-    //             subject: nil,
-    //             use:    nil,
-    //             text:   nil,
-    //             html:   nil,
-    //             base64: nil,
-    //             error:  error.localizedDescription
-    //         )
-    //     }
-    // }
-
     public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
         do {
             let cfg = try loadAndValidateConfig(request)
 
-            // 1) seed with “provided” placeholders
             var (vars, reps) = try buildProvidedReplacements(from: request.variables, config: cfg)
 
-            // 2) generate all dynamic placeholders
             try applyDynamicReplacements(
                 placeholders: cfg.placeholders.rendered,
-                into:                &vars,
-                reps:                 &reps,
-                config:             cfg
+                into: &vars,
+                reps: &reps,
+                config: cfg
             )
 
-            // 3) fetch, fill and post‐process
-            let raw            = try provider.fetchTemplate(at: request.template)
+            let raw        = try provider.fetchTemplate(at: request.template)
             let subject    = try interpolateSubjectIfNeeded(cfg.subject, with: reps)
             let filled     = interpolateTemplate(raw, with: reps)
             let styled     = try injectCSS(into: filled, cssURL: request.template.cssURL(resourcesURL: resourcesURL))
-            let rendered = embedImages(in: styled, imageDir: resourcesURL.appendingPathComponent("Images"))
 
-            let final = try finalize(rendered, returning: request.returning)
+            let withImages = try applyImagePlaceholders(
+                to: styled,
+                config: cfg
+            )
+            // let rendered = embedImages(in: styled, imageDir: resourcesURL.appendingPathComponent("Images"))
+
+            let final = try finalize(withImages, returning: request.returning)
             return .init(success: true, subject: subject, use: cfg.use, text: final.text, html: final.html, base64: final.base64, error: nil)
 
         } catch {
@@ -284,6 +151,29 @@ public struct TemplaterTemplateRenderer: Sendable {
             reps.append(dynRep)
             vars[spec.placeholder] = .string(dynRep.replacement)
         }
+    }
+
+    private func applyImagePlaceholders(
+        to html: String,
+        config: TemplaterTemplateConfiguration
+    ) throws -> String {
+        var out = html
+
+        for imgSpec in config.images {
+            let token = placeholderSyntax.set(for: imgSpec.placeholder)
+            // call your isolated func, handing it the same provider
+            let rep = try renderImageNode(
+                placeholder: imgSpec.placeholder,
+                baseURL:     resourcesURL.appendingPathComponent("Images"),
+                config:      config,
+                syntax:      placeholderSyntax,
+                imageProvider: imageProvider
+            )
+            // do a one-to-one replace of the placeholder
+            out = out.replacingOccurrences(of: token, with: rep.replacement)
+        }
+
+        return out
     }
 
     private func interpolateSubjectIfNeeded(
