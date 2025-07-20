@@ -27,7 +27,9 @@ extension TemplaterGroup:      @retroactive Content { }
 extension TemplaterType:       @retroactive Content { }
 extension TemplaterVariant:    @retroactive Content { }
 extension TemplaterPlaceholderType: @retroactive Content { }
-extension TemplaterPlaceholder:     @retroactive Content { }
+extension TemplaterPlaceholders:     @retroactive Content { }
+extension TemplaterProvidedPlaceholder:     @retroactive Content { }
+extension TemplaterRenderedPlaceholder:     @retroactive Content { }
 extension TemplaterTemplatePath:           @retroactive Content { }  // :contentReference[oaicite:0]{index=0}
 extension TemplaterTemplateConfiguration:  @retroactive Content { }  // :contentReference[oaicite:1]{index=1}
 extension TemplaterTemplate:               @retroactive Content { }  // :contentReference[oaicite:2]{index=2}
