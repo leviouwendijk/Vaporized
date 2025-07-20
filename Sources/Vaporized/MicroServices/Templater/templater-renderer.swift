@@ -202,7 +202,7 @@ public struct TemplaterTemplateRenderer: Sendable {
             let raw            = try provider.fetchTemplate(at: request.template)
             let subject    = try interpolateSubjectIfNeeded(cfg.subject, with: reps)
             let filled     = interpolateTemplate(raw, with: reps)
-            let styled     = try injectCSS(into: filled, platform: request.template.platform, resources: resourcesURL)
+            let styled     = try injectCSS(into: filled, cssURL: request.template.cssURL(resourcesURL: resourcesURL))
             let rendered = embedImages(in: styled, imageDir: resourcesURL.appendingPathComponent("Images"))
 
             let final = try finalize(rendered, returning: request.returning)
