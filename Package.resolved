@@ -20,12 +20,30 @@
       }
     },
     {
+      "identity" : "commerce",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Commerce.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e3f505064a4ed945679b293bc70c70ee30df8d50"
+      }
+    },
+    {
       "identity" : "console-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/console-kit.git",
       "state" : {
         "revision" : "742f624a998cba2a9e653d9b1e91ad3f3a5dff6b",
         "version" : "4.15.2"
+      }
+    },
+    {
+      "identity" : "economics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Economics.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "379ead15beebebf4d3850418baaa0c1f9aff226d"
       }
     },
     {
@@ -70,7 +88,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "cc797b9e31db36c052b5aca0509261c14f74cfc6"
+        "revision" : "1dc5f5d053f4e05b7649adfb5e4aeccca0458a5d"
       }
     },
     {
@@ -151,7 +169,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "534c469159035d9b24b7c13389b2f1cf42015375"
+        "revision" : "eab152a2a13ba2a9d08ff920f3efc3a5ccf2d77d"
       }
     },
     {
