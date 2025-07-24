@@ -52,8 +52,8 @@ public struct TemplaterTemplateRenderer: Sendable {
         self.app = app
     }
 
-    public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
-        do {
+    public func render(request: TemplaterRenderRequest) throws -> TemplaterRenderResponse {
+        // do {
             let cfg = try loadAndValidateConfig(request)
 
             var (vars, reps) = try buildProvidedReplacements(from: request.variables, config: cfg)
@@ -86,10 +86,10 @@ public struct TemplaterTemplateRenderer: Sendable {
             let final = try finalize(withImages, returning: request.returning)
             return .init(success: true, subject: subject, use: cfg.use, text: final.text, html: final.html, base64: final.base64, error: nil)
 
-        } catch {
-            app.standardLogger.error(error.localizedDescription)
-            return .init(success: false, subject: nil, use: nil, text: nil, html: nil, base64: nil, error: error.localizedDescription)
-        }
+        // } catch {
+        //     app.standardLogger.error(error.localizedDescription)
+        //     return .init(success: false, subject: nil, use: nil, text: nil, html: nil, base64: nil, error: error.localizedDescription)
+        // }
     }
 
     private func loadAndValidateConfig(_ request: TemplaterRenderRequest) throws -> TemplaterTemplateConfiguration {
