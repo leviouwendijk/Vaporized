@@ -32,7 +32,7 @@ public struct TemplaterTemplateRenderer: Sendable {
     private let pdfRenderer:   PDFRenderable
     private let placeholderSyntax: PlaceholderSyntax
     private let resourcesURL: URL
-    private let app: Application
+    // private let app: Application
 
     public init(
         provider:           TemplaterTemplateProviding,
@@ -41,7 +41,7 @@ public struct TemplaterTemplateRenderer: Sendable {
         pdfRenderer:        PDFRenderable = WeasyPrintRenderer(),
         placeholderSyntax:  PlaceholderSyntax = PlaceholderSyntax(prepending: "{{", appending: "}}"),
         resourcesURL: URL,
-        app: Application
+        // app: Application
     ) {
         self.provider          = provider
         self.configLoader      = configLoader
@@ -49,7 +49,7 @@ public struct TemplaterTemplateRenderer: Sendable {
         self.pdfRenderer       = pdfRenderer
         self.placeholderSyntax = placeholderSyntax
         self.resourcesURL = resourcesURL
-        self.app = app
+        // self.app = app
     }
 
     public func render(request: TemplaterRenderRequest) throws -> TemplaterRenderResponse {
