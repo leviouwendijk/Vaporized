@@ -1,0 +1,9 @@
+[Patterns]
+# Add glob patterns, e.g. *.swift
+
+[Directories]
+# Add directories, e.g. Sources/
+Templater
+
+[Files]
+# Add specific file paths, e.g. README.md

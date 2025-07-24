@@ -61,10 +61,17 @@ public struct TemplaterTemplateRenderer: Sendable {
                 config: cfg
             )
 
-            let raw        = try provider.fetchTemplate(at: request.template)
-            let subject    = try interpolateSubjectIfNeeded(cfg.subject, with: reps)
-            let filled     = interpolateTemplate(raw, with: reps)
-            let styled     = try injectCSS(into: filled, cssURL: request.template.cssURL(resourcesURL: resourcesURL))
+            let raw = try provider.fetchTemplate(at: request.template)
+            let subject = try interpolateSubjectIfNeeded(cfg.subject, with: reps)
+            let filled = interpolateTemplate(raw, with: reps)
+            let styled: String
+            
+            switch cfg.styles {
+            case .replace:
+                styled = try injectCSS(into: filled, cssURL: request.template.cssURL(resourcesURL: resourcesURL))
+            case .keep:
+                styled = filled
+            }
 
             let withImages = try applyImagePlaceholders(
                 to: styled,
