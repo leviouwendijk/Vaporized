@@ -1,3 +1,4 @@
+import Vapor
 import Foundation
 import Structures
 import Surfaces
@@ -31,6 +32,7 @@ public struct TemplaterTemplateRenderer: Sendable {
     private let pdfRenderer:   PDFRenderable
     private let placeholderSyntax: PlaceholderSyntax
     private let resourcesURL: URL
+    private let app: Application
 
     public init(
         provider:           TemplaterTemplateProviding,
@@ -38,7 +40,8 @@ public struct TemplaterTemplateRenderer: Sendable {
         imageProvider:      TemplaterImageProvider,
         pdfRenderer:        PDFRenderable = WeasyPrintRenderer(),
         placeholderSyntax:  PlaceholderSyntax = PlaceholderSyntax(prepending: "{{", appending: "}}"),
-        resourcesURL: URL
+        resourcesURL: URL,
+        app: Application
     ) {
         self.provider          = provider
         self.configLoader      = configLoader
@@ -46,6 +49,7 @@ public struct TemplaterTemplateRenderer: Sendable {
         self.pdfRenderer       = pdfRenderer
         self.placeholderSyntax = placeholderSyntax
         self.resourcesURL = resourcesURL
+        self.app = app
     }
 
     public func render(request: TemplaterRenderRequest) -> TemplaterRenderResponse {
@@ -83,6 +87,7 @@ public struct TemplaterTemplateRenderer: Sendable {
             return .init(success: true, subject: subject, use: cfg.use, text: final.text, html: final.html, base64: final.base64, error: nil)
 
         } catch {
+            app.standardLogger.error(error.localizedDescription)
             return .init(success: false, subject: nil, use: nil, text: nil, html: nil, base64: nil, error: error.localizedDescription)
         }
     }
