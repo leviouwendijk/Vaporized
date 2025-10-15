@@ -18,6 +18,10 @@ extension CaptcherRequest: @retroactive Content {}
 extension CaptcherResponse: @retroactive Content {}
 extension CaptcherValidationResult: @retroactive Content {}
 extension CaptcherValidateBody: @retroactive Content {}
+extension CaptcherThresholdMetric: @retroactive Content {}
+extension CaptcherThresholdEvaluationResult: @retroactive Content {}
+extension CaptcherMetricEvaluation: @retroactive Content {}
+extension CaptcherMetrics: @retroactive Content {}
 
 // surface: Templater
 extension TemplaterUseDesignation: @retroactive Content { }
