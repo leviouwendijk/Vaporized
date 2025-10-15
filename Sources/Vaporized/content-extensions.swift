@@ -18,10 +18,17 @@ extension CaptcherRequest: @retroactive Content {}
 extension CaptcherResponse: @retroactive Content {}
 extension CaptcherValidationResult: @retroactive Content {}
 extension CaptcherValidateBody: @retroactive Content {}
-extension CaptcherThresholdMetric: @retroactive Content {}
-extension CaptcherThresholdEvaluationResult: @retroactive Content {}
-extension CaptcherMetricEvaluation: @retroactive Content {}
+
+// extension CaptcherThresholdMetric: @retroactive Content {}
+// extension CaptcherThresholdEvaluationResult: @retroactive Content {}
+// extension CaptcherMetricEvaluation: @retroactive Content {}
 extension CaptcherMetrics: @retroactive Content {}
+
+extension CaptcherSignal: @retroactive Content {}
+extension CaptcherRiskPolicy: @retroactive Content {}
+extension CaptcherDecision: @retroactive Content {}
+extension CaptcherSignalContribution: @retroactive Content {}
+extension CaptcherRiskEvaluationResult: @retroactive Content {}
 
 // surface: Templater
 extension TemplaterUseDesignation: @retroactive Content { }
@@ -34,11 +41,11 @@ extension TemplaterPlaceholderType: @retroactive Content { }
 extension TemplaterPlaceholders:     @retroactive Content { }
 extension TemplaterProvidedPlaceholder:     @retroactive Content { }
 extension TemplaterRenderedPlaceholder:     @retroactive Content { }
-extension TemplaterTemplatePath:           @retroactive Content { }  // :contentReference[oaicite:0]{index=0}
-extension TemplaterTemplateConfiguration:  @retroactive Content { }  // :contentReference[oaicite:1]{index=1}
-extension TemplaterTemplate:               @retroactive Content { }  // :contentReference[oaicite:2]{index=2}
-extension TemplaterRenderRequest:  @retroactive Content { }  // :contentReference[oaicite:3]{index=3}
-extension TemplaterRenderResponse: @retroactive Content { }  // :contentReference[oaicite:4]{index=4}
+extension TemplaterTemplatePath:           @retroactive Content { }  
+extension TemplaterTemplateConfiguration:  @retroactive Content { }  
+extension TemplaterTemplate:               @retroactive Content { }  
+extension TemplaterRenderRequest:  @retroactive Content { }  
+extension TemplaterRenderResponse: @retroactive Content { }  
 
 // plate: --- referenced by Templater models
 extension DocumentExtensionType: @retroactive Content { }
