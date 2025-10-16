@@ -29,38 +29,37 @@ public struct CORSMiddleware: Middleware, Sendable {
         self.configuration = configuration
     }
 
-    // public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-    //     if request.method == .OPTIONS {
-    //         var res = Response(status: .noContent)
-    //         addCORSHeaders(to: &res, request: request)
-    //         return request.eventLoop.future(res)
-    //     }
-    //     return next.respond(to: request).map { res in
-    //         var response = res
-    //         self.addCORSHeaders(to: &response, request: request)
-    //         return response
-    //     }
-    // }
-
     public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         if request.method == .OPTIONS {
             var res = Response(status: .noContent)
-                addCORSHeaders(to: &res, request: request)
-                return request.eventLoop.future(res)
+            addCORSHeaders(to: &res, request: request)
+            return request.eventLoop.future(res)
         }
-
-        return next.respond(to: request).flatMapError { error in
-            // Convert the error to a Response (similar to ErrorMiddleware)
-            let res = ErrorMiddleware.default(environment: request.application.environment)
-                .respond(to: request, chainingTo: next)
-                return res
-        }
-        .map { res in
+        return next.respond(to: request).map { res in
             var response = res
-                self.addCORSHeaders(to: &response, request: request)
-                return response
+            self.addCORSHeaders(to: &response, request: request)
+            return response
         }
     }
+
+    // public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
+    //     if request.method == .OPTIONS {
+    //         var res = Response(status: .noContent)
+    //             addCORSHeaders(to: &res, request: request)
+    //             return request.eventLoop.future(res)
+    //     }
+
+    //     return next.respond(to: request).flatMapError { error in
+    //         let res = ErrorMiddleware.default(environment: request.application.environment)
+    //             .respond(to: request, chainingTo: next)
+    //             return res
+    //     }
+    //     .map { res in
+    //         var response = res
+    //             self.addCORSHeaders(to: &response, request: request)
+    //             return response
+    //     }
+    // }
 
     private func addCORSHeaders(to response: inout Response, request: Request) {
         let originHeader = request.headers.first(name: .origin) ?? "*"
