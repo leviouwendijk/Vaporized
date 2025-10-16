@@ -70,7 +70,7 @@ public extension DatamanClient {
             let dmReq = DatamanRequest(
                 operation: .create,
                 database:  "analytics",   
-                table:     "events",      
+                table:     "web.events",      
                 criteria:  nil,
                 values:    .object(row),
                 fieldTypes: fieldTypes,

@@ -33,7 +33,8 @@ public struct CORSMiddleware: Middleware, Sendable {
         if request.method == .OPTIONS {
             var res = Response(status: .noContent)
             addCORSHeaders(to: &res, request: request)
-            return request.eventLoop.future(res)
+            // return request.eventLoop.future(res)
+            return request.eventLoop.makeSucceededFuture(res)
         }
         return next.respond(to: request).map { res in
             var response = res
