@@ -212,7 +212,7 @@ public extension DatamanClient {
 //     return f.string(from: date)
 // }
 
-private func decode<T: Decodable>(_ t: T.Type, from j: JSONValue) throws -> T {
+public func decode<T: Decodable>(_ t: T.Type, from j: JSONValue) throws -> T {
     let data = try JSONEncoder().encode(j)
     return try JSONDecoder().decode(T.self, from: data)
 }
