@@ -113,22 +113,125 @@ extension PSQLQueryConstructor {
 
     // MARK: - Helpers
 
+    // private static func buildWhereClause(
+    //     from request: DatamanRequest,
+    //     startIndex: Int = 1
+    // ) -> (String, [PostgresData]) {
+    //     guard let raw = try? request.criteria?.objectValue, !raw.isEmpty else {
+    //         return ("", [])
+    //     }
+    //     var clauses: [String] = []
+    //     var params: [PostgresData] = []
+
+    //     for (i, key) in Array(raw.keys).enumerated() {
+    //         let idx = startIndex + i
+    //         let castSuffix = request.fieldTypes?[key].map(PSQLType.typeCast) ?? ""
+    //         clauses.append("\(key) = $\(idx)\(castSuffix)")
+    //         params.append(raw[key]!.asPostgresData())
+    //     }
+    //     return ("WHERE " + clauses.joined(separator: " AND "), params)
+    // }
+
     private static func buildWhereClause(
         from request: DatamanRequest,
         startIndex: Int = 1
     ) -> (String, [PostgresData]) {
-        guard let raw = try? request.criteria?.objectValue, !raw.isEmpty else {
-            return ("", [])
-        }
-        var clauses: [String] = []
-        var params: [PostgresData] = []
+        guard let root = request.criteria else { return ("", []) }
 
-        for (i, key) in Array(raw.keys).enumerated() {
-            let idx = startIndex + i
-            let castSuffix = request.fieldTypes?[key].map(PSQLType.typeCast) ?? ""
-            clauses.append("\(key) = $\(idx)\(castSuffix)")
-            params.append(raw[key]!.asPostgresData())
+        var params: [PostgresData] = []
+        var next = startIndex
+
+        func ph(_ data: PostgresData, cast: String? = nil) -> String {
+            defer { next += 1 }
+            params.append(data)
+            return "$\(next)\(cast ?? "")"
         }
-        return ("WHERE " + clauses.joined(separator: " AND "), params)
+
+        // Convert JSONValue → SQL/params recursively
+        func compile(_ node: JSONValue) throws -> String {
+            if let obj = try? node.objectValue {
+                // Logical combinators first
+                if let andArray = obj["$and"], case .array(let parts) = andArray {
+                    let compiled = try parts.map(compile).filter { !$0.isEmpty }
+                    return compiled.isEmpty ? "" : "(" + compiled.joined(separator: " AND ") + ")"
+                }
+                if let orArray = obj["$or"], case .array(let parts) = orArray {
+                    let compiled = try parts.map(compile).filter { !$0.isEmpty }
+                    return compiled.isEmpty ? "" : "(" + compiled.joined(separator: " OR ") + ")"
+                }
+
+                // Field → operator-object or scalar
+                var fragments: [String] = []
+
+                for (field, value) in obj {
+                    // operator-object?
+                    if let opObj = try? value.objectValue {
+                        // Optional per-field cast
+                        let castSuffix = request.fieldTypes?[field].map(PSQLType.typeCast)
+
+                        for (op, rhs) in opObj {
+                            switch op {
+                            case "$eq":
+                                fragments.append("\(field) = \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$ne":
+                                fragments.append("\(field) <> \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$gt":
+                                fragments.append("\(field) > \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$gte":
+                                fragments.append("\(field) >= \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$lt":
+                                fragments.append("\(field) < \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$lte":
+                                fragments.append("\(field) <= \(ph(rhs.asPostgresData(), cast: castSuffix))")
+                            case "$between":
+                                guard case .array(let arr) = rhs, arr.count == 2 else { continue }
+                                let a = ph(arr[0].asPostgresData(), cast: castSuffix)
+                                let b = ph(arr[1].asPostgresData(), cast: castSuffix)
+                                fragments.append("\(field) BETWEEN \(a) AND \(b)")
+                            case "$in":
+                                guard case .array(let arr) = rhs, !arr.isEmpty else { fragments.append("FALSE"); continue }
+                                let phs = arr.map { ph($0.asPostgresData(), cast: castSuffix) }.joined(separator: ", ")
+                                fragments.append("\(field) IN (\(phs))")
+                            case "$like":
+                                fragments.append("\(field) LIKE \(ph(rhs.asPostgresData()))")
+                            case "$ilike":
+                                fragments.append("\(field) ILIKE \(ph(rhs.asPostgresData()))")
+                            case "$is":
+                                // expects null / true / false
+                                if case .null = rhs { fragments.append("\(field) IS NULL") }
+                                else { fragments.append("\(field) IS \(ph(rhs.asPostgresData()))") }
+                            case "$not":
+                                let inner = try compile(.object([field: rhs]))
+                                if !inner.isEmpty { fragments.append("NOT (\(inner))") }
+                            default:
+                                // Unknown op → ignore to be safe
+                                continue
+                            }
+                        }
+                    } else {
+                        // Bare equality: { "field": "value" }
+                        let castSuffix = request.fieldTypes?[field].map(PSQLType.typeCast)
+                        fragments.append("\(field) = \(ph(value.asPostgresData(), cast: castSuffix))")
+                    }
+                }
+
+                return fragments.isEmpty ? "" : "(" + fragments.joined(separator: " AND ") + ")"
+            }
+
+            // Non-object at root: ignore (invalid)
+            return ""
+        }
+
+        let whereSQL: String
+        do {
+            let sqlExpr = try compile(root)
+            whereSQL = sqlExpr.isEmpty ? "" : "WHERE \(sqlExpr)"
+        } catch {
+            // On compile error, fall back to no WHERE (defensive)
+            whereSQL = ""
+            params.removeAll()
+        }
+
+        return (whereSQL, params)
     }
 }
