@@ -49,6 +49,22 @@ private enum DMAnalytics {
     static let events = "web.events"
 }
 
+// Add explicit type casts for columns we filter/order on
+private enum DMAnalyticsFieldTypes {
+    static let events: [String: PSQLType] = [
+        "site_id":     .text,
+        "occurred_at": .timestamptz,
+        "type":        .text,
+        "url_path":    .text,
+        "id":          .bigInt,
+        // extras you might filter on later:
+        "session_id":  .text,
+        "visitor_id":  .text,
+        "form_id":     .text,
+        "form_step":   .text
+    ]
+}
+
 // MARK: - Core paging fetch
 
 public struct EventsPage: Sendable {
@@ -101,7 +117,7 @@ public extension DatamanClient {
             table: DMAnalytics.events,
             criteria: criteria,
             values: nil,
-            fieldTypes: nil,
+            fieldTypes: DMAnalyticsFieldTypes.events,
             order: order,
             limit: pageSize
         )

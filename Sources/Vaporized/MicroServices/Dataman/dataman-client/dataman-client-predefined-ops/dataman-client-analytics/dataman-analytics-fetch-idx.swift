@@ -40,7 +40,13 @@ public extension DatamanClient {
             table: DMFT.viewFirstTouch,
             criteria: criteria,
             values: nil,
-            fieldTypes: nil,
+            // fieldTypes: nil,
+            fieldTypes: [
+                "site_id":    .text,
+                "session_id": .text,
+                "src":        .text,
+                "med":        .text
+            ],
             order: order,
             limit: sessionIds.count
         )
