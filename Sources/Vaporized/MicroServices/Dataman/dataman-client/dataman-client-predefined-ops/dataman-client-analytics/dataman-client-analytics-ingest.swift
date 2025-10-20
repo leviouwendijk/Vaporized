@@ -33,7 +33,10 @@ public extension DatamanClient {
             "tz":          .text,
             "dpr":         .doublePrecision,
             "ok":          .boolean,
-            "raw":         .jsonb
+            "raw":         .jsonb,
+
+            "subdomain":  .text,
+            "location":   .text
         ]
 
         for e in env.events {
@@ -59,6 +62,10 @@ public extension DatamanClient {
             if let v = e.tz    { row["tz"]    = .string(v) }
             if let v = e.dpr   { row["dpr"]   = .double(v) }
             if let v = e.ok    { row["ok"]    = .bool(v) }
+
+            if let v = e.subdomain { row["subdomain"] = .string(v) }
+            if let v = e.location  { row["location"]  = .string(v) }
+
             do {
                 let rawData  = try JSONEncoder().encode(e)
                 let rawValue = try JSONDecoder().decode(JSONValue.self, from: rawData)

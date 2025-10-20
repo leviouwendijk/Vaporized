@@ -33,6 +33,9 @@ public struct WebEventRow: Codable, Sendable {
 
     public let created_at: String
     public let url_path: String?
+
+    public let subdomain: String?
+    public let location: String?
 }
 
 // Minimal operator helpers for Dataman criteria JSON.
@@ -57,11 +60,14 @@ private enum DMAnalyticsFieldTypes {
         "type":        .text,
         "url_path":    .text,
         "id":          .bigInt,
-        // extras you might filter on later:
+
         "session_id":  .text,
         "visitor_id":  .text,
         "form_id":     .text,
-        "form_step":   .text
+        "form_step":   .text,
+
+        "subdomain": .text,     
+        "location":  .text      
     ]
 }
 

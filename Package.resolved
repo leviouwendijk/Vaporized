@@ -61,7 +61,7 @@
       "location" : "https://github.com/leviouwendijk/Extensions.git",
       "state" : {
         "branch" : "master",
-        "revision" : "3310d463b1bc509cccd8e75f0acc221e153f5dff"
+        "revision" : "2670525e08c06638511e3b6a58093efbcc0d78f3"
       }
     },
     {
@@ -178,7 +178,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "fe9ee41ba1b12ccb1ef1859596a68cca9c2f42ef"
+        "revision" : "834f7ac3a56885343996d284ef126feb668634d1"
       }
     },
     {
@@ -267,8 +267,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types.git",
       "state" : {
-        "revision" : "a0a57e949a8903563aba4615869310c0ebf14c03",
-        "version" : "1.4.0"
+        "revision" : "9410f6b9a3d418a5416cfe30d8de4227bc6890a0",
+        "version" : "1.5.0"
       }
     },
     {
