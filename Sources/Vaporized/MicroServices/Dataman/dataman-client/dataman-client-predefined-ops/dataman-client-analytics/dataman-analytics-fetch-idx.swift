@@ -7,6 +7,7 @@ import Extensions
 private enum DMFT {
     static let db = "analytics"
     static let viewFirstTouch = "web.v_session_first_touch"
+    static let viewFirstTouchInWindow = "web.v_first_touch_in_window" // ADD
 }
 
 private struct FirstTouchRow: Decodable, Sendable {
@@ -14,6 +15,16 @@ private struct FirstTouchRow: Decodable, Sendable {
     let session_id: String
     let src: String
     let med: String
+}
+
+
+// window row (includes first_at in the view; we don't actually need to expose it here)
+private struct FirstTouchWindowRow: Decodable, Sendable {
+    let site_id: String
+    let session_id: String
+    let src: String?
+    let med: String?
+    // let first_at: Date?  // present in the view, not needed for the map
 }
 
 public extension DatamanClient {
@@ -258,5 +269,67 @@ public extension DatamanClient {
         }
 
         return touch
+    }
+
+    func fetchFirstTouchForWindow(
+        siteId: String,
+        from: Date,
+        to: Date,
+        on req: Request
+    ) async throws -> [String:(src:String, med:String)] {
+        // Local ISO8601 formatter (UTC, internet date-time)
+        let fmt: ISO8601DateFormatter = {
+            let f = ISO8601DateFormatter()
+            f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            f.timeZone = TimeZone(secondsFromGMT: 0)
+            return f
+        }()
+
+        let criteria: JSONValue = .object([
+            "$and": .array([
+                .object(["site_id": .object(["$eq": .string(siteId)])]),
+                .object(["first_at": .object([
+                    "$between": .array([ .string(fmt.string(from: from)), .string(fmt.string(from: to)) ])
+                ])])
+            ])
+        ])
+
+        let order: JSONValue = .array([
+            .object(["first_at": .string("asc")])
+        ])
+
+        let body = DatamanRequest(
+            operation: .fetch,
+            database: DMFT.db,
+            table: DMFT.viewFirstTouchInWindow,
+            criteria: criteria,
+            values: nil,
+            fieldTypes: [
+                "site_id":    .text,
+                "session_id": .text,
+                "first_at":   .timestamptz,
+                "src":        .text,
+                "med":        .text
+            ],
+            order: order,
+            limit: nil
+        )
+
+        let dmRes = try await send(body, on: req)
+        guard dmRes.success else {
+            throw Abort(.badGateway, reason: dmRes.error ?? "Dataman fetch first-touch (window) failed")
+        }
+
+        // Build the same map type you already use elsewhere
+        var out: [String:(src:String, med:String)] = [:]
+        out.reserveCapacity((dmRes.results ?? []).count)
+
+        let rows: [FirstTouchWindowRow] = try (dmRes.results ?? []).map { try decode(FirstTouchWindowRow.self, from: $0) }
+        for r in rows {
+            let s = (r.src?.isEmpty == false) ? r.src! : "direct"
+            let m = (r.med?.isEmpty == false) ? r.med! : "direct"
+            out[r.session_id] = (s, m)
+        }
+        return out
     }
 }
