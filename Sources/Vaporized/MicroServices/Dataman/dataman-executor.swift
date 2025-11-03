@@ -9,7 +9,7 @@ import Constructors
 
 // @preconcurrency
 // public final class DatamanExecutor: DatamanDatabaseExecutor {
-@available(*, message: "This implementation uses a deprecated PSQL query constructor.")
+@available(*, message: "Use the newer DatamanExecutor with dynamic builder instead.")
 @preconcurrency
 public final class LegacyDatamanExecutor: DatamanDatabaseExecutor {
     private let datamanPool: DatamanPool

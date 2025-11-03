@@ -4,6 +4,7 @@ import Vapor
 import Structures
 import Surfaces
 
+@available(*, message: "Use the PSQL constructor from Constructors library instead.")
 public struct PSQLQueryConstructor { }
 
 extension PSQLQueryConstructor {
