@@ -9,10 +9,10 @@ public extension DatamanClient {
     func fetchValidTokensTokenRow(ip: String, on req: Request) async throws -> TokensTokenRow? {
         req.logger.info("→ fetchValidTokensTokenRow(ip:\(ip))")
         
-        let dmReq = try CaptcherRequest(
+        let dmReq = try await CaptcherRequest(
             operation: .fetch,
             clientIp: ip,
-            fieldTypes: try Structures.PSQLFieldTypeRegistry.table(named: "captcha_tokens")
+            fieldTypes: try await Structures.PSQLFieldTypeRegistry.shared.table(named: "captcha_tokens")
         ).datamanRequest()
         req.logger.debug("  -> DatamanRequest: \(dmReq)")
         
@@ -122,7 +122,7 @@ public extension DatamanClient {
 
     func fetchValidTokensTokenRow(hashed: String, on req: Request) async throws -> TokensTokenRow? {
         let table = "captcha_tokens"
-        let fieldTypes = try PSQLFieldTypeRegistry.table(named: table)
+        let fieldTypes = try await PSQLFieldTypeRegistry.shared.table(named: table)
 
         let dmReq = DatamanRequest(
             operation: .fetch,
