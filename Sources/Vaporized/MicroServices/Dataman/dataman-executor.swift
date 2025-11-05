@@ -119,39 +119,121 @@ public final class LegacyDatamanExecutor: DatamanDatabaseExecutor {
     }
 }
 
+public enum DatamanDebugEvent: Sendable {
+    case building(request: DatamanRequest)
+    case builtSQL(sql: String, binds: [PSQL.SQLBind])
+    case queryStarted(sql: String, binds: [PostgresData])
+    case queryFinished(durationMs: Int, rows: Int)
+    case rowDecodeFailed(index: Int, error: Error)
+    case producedResponse(rows: Int)
+}
+
+public typealias DatamanDebugSink = @Sendable (DatamanDebugEvent) -> Void
+
+// @preconcurrency
+// public final class DatamanExecutor<B: DatamanSQLBuilding>: DatamanDatabaseExecutor {
+//     private let datamanPool: DatamanPool
+//     public init(datamanPool: DatamanPool) { self.datamanPool = datamanPool }
+
+//     public func execute(request: DatamanRequest) async throws -> DatamanResponse {
+//         let pool = try datamanPool.pool(for: request.database)
+
+//         let rendered: PSQL.RenderedSQL = try {
+//             switch request.operation {
+//                 case .fetch:  return try B.buildSelect(from: request)
+//                 case .create: return try B.buildInsert(from: request)
+//                 case .update: return try B.buildUpdate(from: request)
+//                 case .delete: return try B.buildDelete(from: request)
+//             }
+//         }()
+
+//         let rows: [PostgresRow] = try await withCheckedThrowingContinuation { cont in
+//             pool.withConnection { conn in
+//                 conn.query(rendered.sql, rendered.binds.map(PostgresData.initialize(fromPSQLBind:)))
+//                     .map(\.rows)
+//             }.whenComplete { cont.resume(with: $0) }
+//         }
+
+//         let results = try rows.map { row -> JSONValue in
+//             let jsonString: String = try row.decode(String.self, file: "json_row")
+//             guard let data = jsonString.data(using: .utf8) else {
+//                 throw Abort(.internalServerError, reason: "Bad JSON from database")
+//             }
+//             return try JSONDecoder().decode(JSONValue.self, from: data)
+//         }
+
+//         return DatamanResponse(success: true, results: results)
+//     }
+// }
+
 @preconcurrency
 public final class DatamanExecutor<B: DatamanSQLBuilding>: DatamanDatabaseExecutor {
     private let datamanPool: DatamanPool
-    public init(datamanPool: DatamanPool) { self.datamanPool = datamanPool }
+    private let debug: DatamanDebugSink?
+
+    public init(
+        datamanPool: DatamanPool,
+        debug: DatamanDebugSink? = nil
+    ) {
+        self.datamanPool = datamanPool
+        self.debug = debug
+    }
+
+    @inline(__always) private func emit(_ e: DatamanDebugEvent) {
+        debug?(e)
+    }
 
     public func execute(request: DatamanRequest) async throws -> DatamanResponse {
         let pool = try datamanPool.pool(for: request.database)
 
-        let rendered: PSQL.RenderedSQL = try {
-            switch request.operation {
-                case .fetch:  return try B.buildSelect(from: request)
-                case .create: return try B.buildInsert(from: request)
-                case .update: return try B.buildUpdate(from: request)
-                case .delete: return try B.buildDelete(from: request)
-            }
-        }()
+        emit(.building(request: request))
 
+        // Build SQL via your builder
+        let rendered: PSQL.RenderedSQL = try {
+            let r: PSQL.RenderedSQL
+            switch request.operation {
+            case .fetch:  r = try B.buildSelect(from: request)
+            case .create: r = try B.buildInsert(from: request)
+            case .update: r = try B.buildUpdate(from: request)
+            case .delete: r = try B.buildDelete(from: request)
+            }
+            return r
+        }()
+        emit(.builtSQL(sql: rendered.sql, binds: rendered.binds))
+
+        // Map binds (your current JSON-encoding approach)
+        let pgBinds: [PostgresData] = rendered.binds.map(PostgresData.initialize(fromPSQLBind:))
+        emit(.queryStarted(sql: rendered.sql, binds: pgBinds))
+
+        let t0 = DispatchTime.now()
         let rows: [PostgresRow] = try await withCheckedThrowingContinuation { cont in
             pool.withConnection { conn in
-                conn.query(rendered.sql, rendered.binds.map(PostgresData.initialize(fromPSQLBind:)))
-                    .map(\.rows)
+                conn.query(rendered.sql, pgBinds).map(\.rows)
             }.whenComplete { cont.resume(with: $0) }
         }
+        let elapsedMs = Int(Double(DispatchTime.now().uptimeNanoseconds - t0.uptimeNanoseconds) / 1_000_000.0)
+        emit(.queryFinished(durationMs: elapsedMs, rows: rows.count))
 
-        let results = try rows.map { row -> JSONValue in
-            let jsonString: String = try row.decode(String.self, file: "json_row")
-            guard let data = jsonString.data(using: .utf8) else {
-                throw Abort(.internalServerError, reason: "Bad JSON from database")
+        // Decode rows -> JSONValue
+        var out: [JSONValue] = []
+        out.reserveCapacity(rows.count)
+
+        for (i, row) in rows.enumerated() {
+            do {
+                let jsonString: String = try row.decode(String.self, file: "json_row")
+                guard let data = jsonString.data(using: .utf8) else {
+                    throw Abort(.internalServerError, reason: "Bad JSON from database")
+                }
+                let j = try JSONDecoder().decode(JSONValue.self, from: data)
+                out.append(j)
+            } catch {
+                emit(.rowDecodeFailed(index: i, error: error))
+                throw error
             }
-            return try JSONDecoder().decode(JSONValue.self, from: data)
         }
 
-        return DatamanResponse(success: true, results: results)
+        emit(.producedResponse(rows: out.count))
+        return DatamanResponse(success: true, results: out)
     }
 }
 
