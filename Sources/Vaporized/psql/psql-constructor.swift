@@ -3,6 +3,7 @@ import PostgresKit
 import Vapor
 import Structures
 import Surfaces
+import Constructors
 
 @available(*, message: "Use the PSQL constructor from Constructors library instead.")
 public struct PSQLQueryConstructor { }

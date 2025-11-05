@@ -3,6 +3,7 @@ import Vapor
 import Surfaces
 import Structures
 import Extensions
+import Constructors
 
 public extension DatamanClient {
     func ingestAnalyticsBatch(

@@ -38,6 +38,10 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.8.0"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
         .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.0.0"),
+        .package(
+            url: "https://github.com/leviouwendijk/Constructors.git",
+            branch: "master"
+        ),
     ],
     targets: [
         .target(
@@ -55,6 +59,7 @@ let package = Package(
                 .product(name: "NIOCore", package: "swift-nio"),
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "JWTKit", package: "jwt-kit"),
+                .product(name: "Constructors", package: "Constructors"),
             ],
             resources: [
                 .process("Resources")

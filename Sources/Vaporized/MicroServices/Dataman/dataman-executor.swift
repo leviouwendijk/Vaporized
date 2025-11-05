@@ -244,20 +244,20 @@ public final class DatamanExecutor<B: DatamanSQLBuilding>: DatamanDatabaseExecut
 //     }
 // }
 
-private extension PostgresData {
-    static func initialize(fromPSQLBind b: PSQL.SQLBind) -> PostgresData {
-        let encoded = (try? JSONEncoder().encode(b)) ?? Data()
-        if encoded.isEmpty { return .null }
-        if let _ = try? JSONDecoder().decode(Optional<String>.self, from: encoded) as String? {
-            if (try? JSONDecoder().decode(JSONNull.self, from: encoded)) != nil { return .null }
-            if let s = try? JSONDecoder().decode(String.self, from: encoded) { return PostgresData(string: s) }
-        }
-        if let i = try? JSONDecoder().decode(Int.self, from: encoded) { return PostgresData(int: i) }
-        if let d = try? JSONDecoder().decode(Double.self, from: encoded) { return PostgresData(double: d) }
-        if let b = try? JSONDecoder().decode(Bool.self, from: encoded) { return PostgresData(bool: b) }
+// private extension PostgresData {
+//     static func initialize(fromPSQLBind b: PSQL.SQLBind) -> PostgresData {
+//         let encoded = (try? JSONEncoder().encode(b)) ?? Data()
+//         if encoded.isEmpty { return .null }
+//         if let _ = try? JSONDecoder().decode(Optional<String>.self, from: encoded) as String? {
+//             if (try? JSONDecoder().decode(JSONNull.self, from: encoded)) != nil { return .null }
+//             if let s = try? JSONDecoder().decode(String.self, from: encoded) { return PostgresData(string: s) }
+//         }
+//         if let i = try? JSONDecoder().decode(Int.self, from: encoded) { return PostgresData(int: i) }
+//         if let d = try? JSONDecoder().decode(Double.self, from: encoded) { return PostgresData(double: d) }
+//         if let b = try? JSONDecoder().decode(Bool.self, from: encoded) { return PostgresData(bool: b) }
 
-        // Fallback: bind as text (JSON object/array cases land here)
-        return PostgresData(string: String(data: encoded, encoding: .utf8) ?? "null")
-    }
-}
-private struct JSONNull: Decodable {}
+//         // Fallback: bind as text (JSON object/array cases land here)
+//         return PostgresData(string: String(data: encoded, encoding: .utf8) ?? "null")
+//     }
+// }
+// private struct JSONNull: Decodable {}

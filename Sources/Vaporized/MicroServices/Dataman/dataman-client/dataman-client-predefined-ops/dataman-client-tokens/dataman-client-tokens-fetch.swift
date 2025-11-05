@@ -4,6 +4,7 @@ import Surfaces
 import Interfaces
 import Vapor
 import plate
+import Constructors
 
 public extension DatamanClient {
     func fetchValidTokensTokenRow(ip: String, on req: Request) async throws -> TokensTokenRow? {
@@ -12,7 +13,7 @@ public extension DatamanClient {
         let dmReq = try await CaptcherRequest(
             operation: .fetch,
             clientIp: ip,
-            fieldTypes: try await Structures.PSQLFieldTypeRegistry.shared.table(named: "captcha_tokens")
+            fieldTypes: try await Constructors.PSQLFieldTypeRegistry.shared.table(named: "captcha_tokens")
         ).datamanRequest()
         req.logger.debug("  -> DatamanRequest: \(dmReq)")
         
@@ -122,7 +123,7 @@ public extension DatamanClient {
 
     func fetchValidTokensTokenRow(hashed: String, on req: Request) async throws -> TokensTokenRow? {
         let table = "captcha_tokens"
-        let fieldTypes = try await PSQLFieldTypeRegistry.shared.table(named: table)
+        let fieldTypes = try await Constructors.PSQLFieldTypeRegistry.shared.table(named: table)
 
         let dmReq = DatamanRequest(
             operation: .fetch,

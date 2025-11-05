@@ -1,5 +1,5 @@
 {
-  "originHash" : "ad563d124fac64b26899f075f2a1b986e1c02bcc817243cc1413e70cc03f8cb1",
+  "originHash" : "fbb2d460cf373dbed51a51cf24884338984f6b6a207f0e82cf077806e856df8c",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -43,7 +43,7 @@
       "location" : "https://github.com/leviouwendijk/Constructors.git",
       "state" : {
         "branch" : "master",
-        "revision" : "eb52dd41e4f8fd667d2c7a6a0c0e8717fee74630"
+        "revision" : "6ffacd7181a22c5403204de60ee6a3f20cfaa41d"
       }
     },
     {
@@ -124,7 +124,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "53f7bb1ffc15a13cb815d6a3ed8128d8b8dab960"
+        "revision" : "5241d0b9aeb573e40f5c3eccbeb6a6e604089937"
       }
     },
     {
@@ -169,7 +169,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "4ef1312f9de8a9abba53717b550b76520b2f4772"
+        "revision" : "7f4c0d94fbb38e1a0c556ba30d2d5c959f366507"
       }
     },
     {
@@ -178,7 +178,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "b00f87887fe915a5359c48f92e28dd0f6cf11784"
+        "revision" : "954abf2c3222cdd2bcf6950078b719ba75016240"
       }
     },
     {
@@ -357,8 +357,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/swift-service-lifecycle.git",
       "state" : {
-        "revision" : "0fcc4c9c2d58dd98504c06f7308c86de775396ff",
-        "version" : "2.9.0"
+        "revision" : "1de37290c0ab3c5a96028e0f02911b672fd42348",
+        "version" : "2.9.1"
       }
     },
     {
@@ -375,8 +375,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/vapor.git",
       "state" : {
-        "revision" : "d07643bdb4b51780ba8d566c5086d6af50bb78c0",
-        "version" : "4.117.1"
+        "revision" : "c84ffd383814bf510240f269596a271221fc8964",
+        "version" : "4.119.0"
       }
     },
     {

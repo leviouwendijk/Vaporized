@@ -3,6 +3,7 @@ import Vapor
 import Structures
 import Surfaces
 import Extensions
+import Constructors
 
 private enum DMFT {
     static let db = "analytics"
