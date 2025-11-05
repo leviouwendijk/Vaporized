@@ -33,6 +33,7 @@ extension PostgresData {
             // Policy: bind as ISO8601 text; SQL side casts with ::timestamptz
             let f = ISO8601DateFormatter()
             f.formatOptions = [.withInternetDateTime, .withFractionalSeconds, .withColonSeparatorInTimeZone]
+            f.timeZone = TimeZone(secondsFromGMT: 0)  // UTC
             return PostgresData(string: f.string(from: d))
 
         case .uuid(let u):
@@ -93,8 +94,19 @@ extension PostgresData {
     static func initialize(fromPSQLBind bind: PSQL.SQLBind) -> PostgresData {
         // 1) Encode once with ISO8601 dates
         let enc = JSONEncoder()
+        // if #available(macOS 10.12, *) {
+        //     enc.dateEncodingStrategy = .iso8601
+
         if #available(macOS 10.12, *) {
-            enc.dateEncodingStrategy = .iso8601
+            enc.dateEncodingStrategy = .custom { date, encoder in
+                let f = ISO8601DateFormatter()
+                f.formatOptions = [
+                    .withInternetDateTime, .withFractionalSeconds, .withColonSeparatorInTimeZone,
+                ]
+                f.timeZone = TimeZone(secondsFromGMT: 0)  // UTC
+                var c = encoder.singleValueContainer()
+                try c.encode(f.string(from: date))
+            }
         } else {
             let f = DateFormatter()
             f.calendar = Calendar(identifier: .iso8601)
