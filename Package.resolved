@@ -97,7 +97,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "613f6a605619abee9197335c97698de405142d7b"
+        "revision" : "d2cfc21ee474562a6ce8f212258d00926efbfb9c"
       }
     },
     {
@@ -124,7 +124,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "5241d0b9aeb573e40f5c3eccbeb6a6e604089937"
+        "revision" : "ea87746b3f62169a132451d0abdff7bfa0bab956"
       }
     },
     {
@@ -169,7 +169,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "7f4c0d94fbb38e1a0c556ba30d2d5c959f366507"
+        "revision" : "73223257c9055cf49b516a17bb2e45ff7f2f170d"
       }
     },
     {
@@ -178,7 +178,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "954abf2c3222cdd2bcf6950078b719ba75016240"
+        "revision" : "5c9f2d31e1f4e03935fc8aa04b2c7521e8879d34"
       }
     },
     {
@@ -303,8 +303,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-extras.git",
       "state" : {
-        "revision" : "b87fdbf492c8fd5ac860e642c714d2d24156990a",
-        "version" : "1.30.0"
+        "revision" : "7ee281d816fa8e5f3967a2c294035a318ea551c7",
+        "version" : "1.31.0"
       }
     },
     {
