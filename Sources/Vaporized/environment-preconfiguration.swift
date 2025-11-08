@@ -1,7 +1,20 @@
 import Foundation
 import Vapor
+import plate
 
-public protocol EnvironmentPreconfigurationKeyProtocol: RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == String {}
+public protocol EnvironmentPreconfigurationKeyProtocol: RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == String {
+    var environmentKey: String { get }
+
+    func infer() -> String
+}
+
+extension EnvironmentPreconfigurationKeyProtocol {
+    public func infer() -> String {
+        return self.rawValue
+            .snake()
+            .uppercased()
+    }
+}
 
 private struct EnvironmentPreconfigurationKey<K>: StorageKey
 

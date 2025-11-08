@@ -9,6 +9,7 @@ public extension DatamanClient {
     func createTokensTokenRow(ip: String, rawToken: String, on req: Request) async throws {
         let expiryDate = Date().addingTimeInterval(15 * 60)
         let expiry     = expiryDate.postgresTimestamp
+        let hashed     = plate.hash(rawToken)
 
         let dr = DatamanRequest(
             operation: .create,
@@ -16,7 +17,7 @@ public extension DatamanClient {
             table:    "captcha_tokens",
             criteria: nil,
             values: .object([
-                "hashed_token": .string(hash(rawToken)),
+                "hashed_token": .string(hashed),
                 "expires_at":   .string(expiry),
                 "max_usages":   .int(10),
                 "ip_address":   .string(ip)
