@@ -2,29 +2,25 @@ import Foundation
 import Vapor
 import plate
 
-public protocol EnvironmentPreconfigurationKeyProtocol: RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == String {
-    var environmentKey: String { get }
+// public protocol EnvironmentPreconfigurationKeyProtocol: RawRepresentable, CaseIterable, Sendable, Hashable where RawValue == String {
+    // var environmentKey: String { get }
 
-    func infer() -> String
-}
+    // func infer() -> String
+// }
 
-extension EnvironmentPreconfigurationKeyProtocol {
-    public func infer() -> String {
-        return self.rawValue
-            .snake()
-            .uppercased()
-    }
-}
+// extension EnvironmentPreconfigurationKeyProtocol {
+//     public func infer() -> String {
+//         return self.rawValue
+//             .snake()
+//             .uppercased()
+//     }
+// }
 
-private struct EnvironmentPreconfigurationKey<K>: StorageKey
-
-where K: EnvironmentPreconfigurationKeyProtocol {
+private struct EnvironmentPreconfigurationKey<K>: StorageKey where K: EnvironmentExtractable {
     typealias Value = EnvironmentPreconfiguration<K>
 }
 
-public struct EnvironmentPreconfiguration<K>: Sendable
-where K: EnvironmentPreconfigurationKeyProtocol
-{
+public struct EnvironmentPreconfiguration<K>: Sendable where K: EnvironmentExtractable {
     private let app: Application
     private let keys: [K]
     private var storage: [K: String]
@@ -44,19 +40,23 @@ where K: EnvironmentPreconfigurationKeyProtocol
     }
 
     public func validate() throws -> [K: String] {
-        var dict = [K: String]()
-        for key in keys {
-            // guard let val = Environment.get(key.rawValue), !val.isEmpty else {
-            //     app.standardLogger.error("Missing \(key.rawValue) from app environment!")
-            //     throw Abort(.internalServerError, reason: "Missing \(key.rawValue)")
-            // }
-            guard let val = Environment.get(key.environmentKey), !val.isEmpty else {
-                app.standardLogger.error("Missing \(key.environmentKey) from app environment!")
-                throw Abort(.internalServerError, reason: "Missing \(key.environmentKey)")
+        // Delegate lookup/validation to plate, keep Vaporized error surface
+        do {
+            return try keys.validate()
+        } catch {
+            // Log each missing/empty for clear diagnostics
+            for k in keys {
+                if (k.optionalValue()) == nil {
+                    let name: String
+                    switch k.key {
+                    case .symbol(let s): name = s
+                    case .auto:          name = k.infer()
+                    }
+                    app.standardLogger.error("Missing \(name) from app environment!")
+                }
             }
-            dict[key] = val
+            throw Abort(.internalServerError, reason: "Missing required environment variables")
         }
-        return dict
     }
 
     public func store() throws {
@@ -72,7 +72,7 @@ where K: EnvironmentPreconfigurationKeyProtocol
 extension Application {
     public func preconfiguration<K>(
         load type: K.Type
-    ) -> EnvironmentPreconfiguration<K> where K: EnvironmentPreconfigurationKeyProtocol {
+    ) -> EnvironmentPreconfiguration<K> where K: EnvironmentExtractable {
         guard let cfg = storage[EnvironmentPreconfigurationKey<K>.self] else {
             fatalError("""
                 EnvironmentPreconfiguration<\(K.self)> not initialized; \
@@ -85,7 +85,7 @@ extension Application {
     public func preconfigureEnvironment<K>(
         using type: K.Type,
         keys: [K] = Array(K.allCases)
-    ) throws where K: EnvironmentPreconfigurationKeyProtocol {
+    ) throws where K: EnvironmentExtractable {
         _ = try EnvironmentPreconfiguration<K>(app: self, keys: keys)
     }
 }
