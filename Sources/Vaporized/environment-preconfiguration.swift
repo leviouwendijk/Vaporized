@@ -46,9 +46,13 @@ where K: EnvironmentPreconfigurationKeyProtocol
     public func validate() throws -> [K: String] {
         var dict = [K: String]()
         for key in keys {
-            guard let val = Environment.get(key.rawValue), !val.isEmpty else {
-                app.standardLogger.error("Missing \(key.rawValue) from app environment!")
-                throw Abort(.internalServerError, reason: "Missing \(key.rawValue)")
+            // guard let val = Environment.get(key.rawValue), !val.isEmpty else {
+            //     app.standardLogger.error("Missing \(key.rawValue) from app environment!")
+            //     throw Abort(.internalServerError, reason: "Missing \(key.rawValue)")
+            // }
+            guard let val = Environment.get(key.environmentKey), !val.isEmpty else {
+                app.standardLogger.error("Missing \(key.environmentKey) from app environment!")
+                throw Abort(.internalServerError, reason: "Missing \(key.environmentKey)")
             }
             dict[key] = val
         }
