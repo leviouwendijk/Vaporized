@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
       "state" : {
-        "revision" : "efb14fec9f79f3f8d4f2a6c0530303efb6fe6533",
-        "version" : "1.29.1"
+        "revision" : "b2faff932b956df50668241d14f1b42f7bae12b4",
+        "version" : "1.30.0"
       }
     },
     {
@@ -43,7 +43,7 @@
       "location" : "https://github.com/leviouwendijk/Constructors.git",
       "state" : {
         "branch" : "master",
-        "revision" : "59a30a2328f8da497fe68da5ce23122276bcec58"
+        "revision" : "f11bb9ad49e9d19f896870721211c321d9d34905"
       }
     },
     {
@@ -97,7 +97,7 @@
       "location" : "https://github.com/leviouwendijk/Interfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "d2cfc21ee474562a6ce8f212258d00926efbfb9c"
+        "revision" : "dfbc9dfcbcd3641fec630f2425ac1b198c2265aa"
       }
     },
     {
@@ -124,7 +124,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "88563936df90370efe190421f4bf5dae8b83d600"
+        "revision" : "24aa5341096d28aa06bcd59d0a2edf998a0ebf60"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/routing-kit.git",
       "state" : {
-        "revision" : "93f7222c8e195cbad39fafb5a0e4cc85a8def7ea",
-        "version" : "4.9.2"
+        "revision" : "1a10ccea61e4248effd23b6e814999ce7bdf0ee0",
+        "version" : "4.9.3"
       }
     },
     {
@@ -169,7 +169,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "19b0de73ee7cdedf6f6b2641716cb239527034de"
+        "revision" : "a299a5a59961fd6e3efffd2a8dd90c3e786e8e6e"
       }
     },
     {
@@ -178,7 +178,7 @@
       "location" : "https://github.com/leviouwendijk/Surfaces.git",
       "state" : {
         "branch" : "master",
-        "revision" : "3e701b770222541ccea337af789423badcef439f"
+        "revision" : "202b2931e93dc5fac4aefb5208fdb0314a288dd2"
       }
     },
     {
@@ -258,8 +258,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-structured-headers.git",
       "state" : {
-        "revision" : "a9f3c352f4d46afd155e00b3c6e85decae6bcbeb",
-        "version" : "1.5.0"
+        "revision" : "76d7627bd88b47bf5a0f8497dd244885960dde0b",
+        "version" : "1.6.0"
       }
     },
     {
@@ -294,8 +294,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "a24771a4c228ff116df343c85fcf3dcfae31a06c",
-        "version" : "2.88.0"
+        "revision" : "56724a2b6d8e2aed1b2c5f23865b9ea5c43f9977",
+        "version" : "2.89.0"
       }
     },
     {
@@ -312,8 +312,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "5e9e99ec96c53bc2c18ddd10c1e25a3cd97c55e5",
-        "version" : "1.38.0"
+        "revision" : "c2ba4cfbb83f307c66f5a6df6bb43e3c88dfbf80",
+        "version" : "1.39.0"
       }
     },
     {
@@ -375,8 +375,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/vapor.git",
       "state" : {
-        "revision" : "c84ffd383814bf510240f269596a271221fc8964",
-        "version" : "4.119.0"
+        "revision" : "6b7a70a607e61f81214f09130009af4ed76d9d62",
+        "version" : "4.119.2"
       }
     },
     {
