@@ -4,6 +4,7 @@ import Structures
 import Surfaces
 import Extensions
 import Constructors
+import Primitives
 
 private enum DMFT {
     static let db = "analytics"

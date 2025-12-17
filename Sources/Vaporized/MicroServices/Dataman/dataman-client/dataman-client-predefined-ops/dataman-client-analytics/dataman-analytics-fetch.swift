@@ -4,6 +4,7 @@ import Structures
 import Surfaces
 import Extensions
 import Constructors
+import Primitives
 
 // What we read back from Dataman for web.events (columns you actually store)
 public struct WebEventRow: Codable, Sendable {

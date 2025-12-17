@@ -4,6 +4,7 @@ import Surfaces
 import Structures
 import Extensions
 import Constructors
+import Primitives
 
 public extension DatamanClient {
     func ingestAnalyticsBatch(

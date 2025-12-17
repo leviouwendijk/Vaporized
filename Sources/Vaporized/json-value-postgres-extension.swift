@@ -1,5 +1,6 @@
 import PostgresKit
-import Structures
+// import Structures
+import Primitives
 
 extension JSONValue {
     public func asPostgresData() -> PostgresData {

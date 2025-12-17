@@ -2,6 +2,7 @@ import Vapor
 import Surfaces
 import Structures
 import Constructors
+import Primitives
 
 public extension DatamanSchemaLinter {
     static func lint<D: DatamanTransferableObject>(

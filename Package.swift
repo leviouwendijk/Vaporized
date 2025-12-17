@@ -42,6 +42,10 @@ let package = Package(
             url: "https://github.com/leviouwendijk/Constructors.git",
             branch: "master"
         ),
+        .package(
+            url: "https://github.com/leviouwendijk/Primitives.git",
+            branch: "master"
+        ),
     ],
     targets: [
         .target(
@@ -60,6 +64,7 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "JWTKit", package: "jwt-kit"),
                 .product(name: "Constructors", package: "Constructors"),
+                .product(name: "Primitives", package: "Primitives"),
             ],
             resources: [
                 .process("Resources")
@@ -74,6 +79,7 @@ let package = Package(
                 .product(name: "Extensions", package: "Extensions"),
                 .product(name: "Interfaces", package: "Interfaces"),
                 .product(name: "Surfaces", package: "Surfaces"),
+                .product(name: "Primitives", package: "Primitives"),
                 // .product(name: "PostgresNIO", package: "postgres-nio"),
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),

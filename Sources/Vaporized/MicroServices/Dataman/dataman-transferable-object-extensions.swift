@@ -1,5 +1,6 @@
 import Vapor
 import Structures
+import Primitives
 import Surfaces
 
 public extension DatamanResponse {

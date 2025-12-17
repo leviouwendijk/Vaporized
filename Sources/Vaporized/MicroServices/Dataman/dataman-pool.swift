@@ -5,7 +5,8 @@ import NIO               // EventLoopGroup
 import NIOSSL            // TLS support
 import FluentPostgresDriver  // SQLPostgresConfiguration
 import PostgresKit           // PostgresConnectionSource & pool
-import Extensions
+// import Extensions
+import plate
 
 public final class DatamanPool: @unchecked Sendable {
     public let pools: [DatabaseKey: EventLoopGroupConnectionPool<PostgresConnectionSource>]

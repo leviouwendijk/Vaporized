@@ -2,6 +2,7 @@ import Surfaces
 import Structures
 import Vapor
 import plate
+import Primitives
 
 // extension PreparableContent: @retroactive Content {}
 // illegal

@@ -4,6 +4,7 @@ import Structures
 import Surfaces
 import Interfaces
 import plate
+import Primitives
 
 public enum TemplaterTemplateRenderingError: Error, LocalizedError, Sendable {
     case unsupportedReturnType(template: String, type: String)

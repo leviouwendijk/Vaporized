@@ -5,6 +5,7 @@ import Interfaces
 import Vapor
 import plate
 import Constructors
+import Primitives
 
 public extension DatamanClient {
     func fetchValidTokensTokenRow(ip: String, on req: Request) async throws -> TokensTokenRow? {
