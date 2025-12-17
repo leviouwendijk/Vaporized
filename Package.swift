@@ -46,6 +46,14 @@ let package = Package(
             url: "https://github.com/leviouwendijk/Primitives.git",
             branch: "master"
         ),
+        .package(
+            url: "https://github.com/leviouwendijk/Milieu.git",
+            branch: "master"
+        ),
+        .package(
+            url: "https://github.com/leviouwendijk/Loggers.git",
+            branch: "master"
+        ),
     ],
     targets: [
         .target(
@@ -65,6 +73,8 @@ let package = Package(
                 .product(name: "JWTKit", package: "jwt-kit"),
                 .product(name: "Constructors", package: "Constructors"),
                 .product(name: "Primitives", package: "Primitives"),
+                .product(name: "Milieu", package: "Milieu"),
+                .product(name: "Loggers", package: "Loggers"),
             ],
             resources: [
                 .process("Resources")

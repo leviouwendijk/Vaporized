@@ -1,6 +1,7 @@
 import Vapor
 // import Interfaces
-import plate
+// import plate
+import Loggers
 
 private struct LoggerKey: StorageKey { typealias Value = StandardLogger }
 private struct AppNameKey: StorageKey { typealias Value = String }

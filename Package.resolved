@@ -1,5 +1,5 @@
 {
-  "originHash" : "fbb2d460cf373dbed51a51cf24884338984f6b6a207f0e82cf077806e856df8c",
+  "originHash" : "40f3b862fb29ea2fba241e72cee3add0d4d39e6c129666706dfab61c30d359a0",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -43,7 +43,7 @@
       "location" : "https://github.com/leviouwendijk/Constructors.git",
       "state" : {
         "branch" : "master",
-        "revision" : "fae76b4e292f486d63ece67d8ae8dff2322189ff"
+        "revision" : "d6e84736263840a271d72d23b8a3d22918d746a2"
       }
     },
     {
@@ -110,12 +110,30 @@
       }
     },
     {
+      "identity" : "loggers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Loggers.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "2de48b468a3be0b1d4f0c47310628ec5b53d46e9"
+      }
+    },
+    {
       "identity" : "methods",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/leviouwendijk/Methods.git",
       "state" : {
         "branch" : "master",
-        "revision" : "bddfab93235482cdd8b2deed7b38859531adece1"
+        "revision" : "3668117392a5e07ba36ba461adb90f1805461c3e"
+      }
+    },
+    {
+      "identity" : "milieu",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Milieu.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "242e890af20eb5f77087cf116ae9374f1f809b2a"
       }
     },
     {
@@ -133,7 +151,7 @@
       "location" : "https://github.com/leviouwendijk/plate.git",
       "state" : {
         "branch" : "master",
-        "revision" : "91d612d0eea809ee46b9b9be03fbfa06388c45bf"
+        "revision" : "922a9af130ece34c788eea5bedad04ac99e27f75"
       }
     },
     {
@@ -187,7 +205,7 @@
       "location" : "https://github.com/leviouwendijk/Structures.git",
       "state" : {
         "branch" : "master",
-        "revision" : "dbb05be552675828613b42b87021cfc4177d8ea1"
+        "revision" : "640ecf20394cd49d1947d9eff424e877986e5b41"
       }
     },
     {
@@ -398,12 +416,30 @@
       }
     },
     {
+      "identity" : "variables",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Variables.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "c533569cd399d8d4762f5f4f8241e2234735c6d0"
+      }
+    },
+    {
       "identity" : "websocket-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/websocket-kit.git",
       "state" : {
         "revision" : "8666c92dbbb3c8eefc8008c9c8dcf50bfd302167",
         "version" : "2.16.1"
+      }
+    },
+    {
+      "identity" : "writers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/leviouwendijk/Writers.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6084ab52b34ab2433000ad865cfa13bd6fe3b804"
       }
     }
   ],
