@@ -5,6 +5,7 @@ import Structures
 import Extensions
 import Constructors
 import Primitives
+import PSQL
 
 public extension DatamanClient {
     func ingestAnalyticsBatch(

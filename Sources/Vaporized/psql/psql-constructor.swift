@@ -5,6 +5,7 @@ import Structures
 import Surfaces
 import Constructors
 import Primitives
+import PSQL
 
 @available(*, message: "Use the PSQL constructor from Constructors library instead.")
 public struct PSQLQueryConstructor { }

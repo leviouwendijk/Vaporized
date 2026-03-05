@@ -3,6 +3,7 @@ import Surfaces
 import Structures
 import Constructors
 import Primitives
+import PSQL
 
 public extension DatamanSchemaLinter {
     static func lint<D: DatamanTransferableObject>(

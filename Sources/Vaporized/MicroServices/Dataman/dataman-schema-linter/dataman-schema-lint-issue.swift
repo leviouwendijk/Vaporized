@@ -1,5 +1,6 @@
 import Foundation
 import Constructors
+import PSQL
 
 public enum DatamanSchemaLintIssue: Error, LocalizedError, Sendable, CustomStringConvertible {
     case missingColumn(name: String)      // in DB, not in DTO — or vice-versa depending on perspective

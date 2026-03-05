@@ -8,7 +8,7 @@ import Primitives
 // illegal
 
 // library                               :  Structures
-extension FieldValue                     :  @retroactive Content { }
+// extension FieldValue                     :  @retroactive Content { }
 extension JSONValue                      :  @retroactive Content { }
 
 // surface                               :  Dataman

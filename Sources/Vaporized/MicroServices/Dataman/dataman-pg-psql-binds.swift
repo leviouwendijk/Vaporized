@@ -1,6 +1,7 @@
 import Foundation
 import PostgresKit
 import Constructors
+import PSQL
 
 extension PostgresData {
     /// Entry: prefer typed binds; otherwise fall back to erased-Encodable path.

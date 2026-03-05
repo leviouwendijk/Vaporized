@@ -5,6 +5,7 @@ import Surfaces
 import Extensions
 import Constructors
 import Primitives
+import PSQL
 
 private enum DMFT {
     static let db = "analytics"
