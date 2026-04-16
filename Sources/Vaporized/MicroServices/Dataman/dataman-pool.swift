@@ -7,6 +7,7 @@ import FluentPostgresDriver  // SQLPostgresConfiguration
 import PostgresKit           // PostgresConnectionSource & pool
 // import Extensions
 import plate
+import Primitives
 
 public final class DatamanPool: @unchecked Sendable {
     public let pools: [DatabaseKey: EventLoopGroupConnectionPool<PostgresConnectionSource>]
@@ -33,7 +34,7 @@ public final class DatamanPool: @unchecked Sendable {
         let key: DatabaseKey
         do {
             key = try DatabaseKey.parse(from: database)
-        } catch let error as EnumParsingError {
+        } catch let error {
             throw Abort(.badRequest, reason: error.localizedDescription)
         }
         guard let pool = pools[key] else {
