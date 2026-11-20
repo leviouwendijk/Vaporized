@@ -80,24 +80,5 @@ let package = Package(
                 .process("Resources")
             ],
         ),
-        .testTarget(
-            name: "VaporizedTests",
-            dependencies: [
-                "Vaporized",
-                .product(name: "plate", package: "plate"),
-                .product(name: "Structures", package: "Structures"),
-                .product(name: "Extensions", package: "Extensions"),
-                .product(name: "Interfaces", package: "Interfaces"),
-                .product(name: "Surfaces", package: "Surfaces"),
-                .product(name: "Primitives", package: "Primitives"),
-                // .product(name: "PostgresNIO", package: "postgres-nio"),
-                .product(name: "Fluent", package: "fluent"),
-                .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
-                .product(name: "Vapor", package: "vapor"),
-                .product(name: "NIOCore", package: "swift-nio"),
-                .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "JWTKit", package: "jwt-kit"),
-            ]
-        ),
     ]
 )
