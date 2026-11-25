@@ -58,7 +58,7 @@
     {
       "identity" : "css",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/CSS.git",
+      "location" : "https://github.com/swift-dsl/CSS.git",
       "state" : {
         "branch" : "master",
         "revision" : "68f20037a981a7f2ce1268cfb7e59fc9464d716f"
@@ -76,7 +76,7 @@
     {
       "identity" : "dsl",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/DSL.git",
+      "location" : "https://github.com/swift-dsl/DSL.git",
       "state" : {
         "branch" : "master",
         "revision" : "703dbdf2da2a9fe814a1843f35dfb7104229f4eb"
@@ -130,7 +130,7 @@
     {
       "identity" : "html",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/HTML.git",
+      "location" : "https://github.com/swift-dsl/HTML.git",
       "state" : {
         "branch" : "master",
         "revision" : "27657e5ec38bd0921e64d795c8e7a33b2c1195fc"
@@ -157,7 +157,7 @@
     {
       "identity" : "js",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/JS.git",
+      "location" : "https://github.com/swift-dsl/JS.git",
       "state" : {
         "branch" : "master",
         "revision" : "09b61d8c0f29a225569d280938f86c2e4f2407bc"
@@ -211,7 +211,7 @@
     {
       "identity" : "parsing",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/Parsing.git",
+      "location" : "https://github.com/swift-langs/Parsing.git",
       "state" : {
         "branch" : "master",
         "revision" : "38e346697615fbb32fdac86e6528c18104d89334"
@@ -283,7 +283,7 @@
     {
       "identity" : "psql",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leviouwendijk/PSQL.git",
+      "location" : "https://github.com/swift-dsl/PSQL.git",
       "state" : {
         "branch" : "master",
         "revision" : "f9fde94afd91f3eff626690d08ca542545d6abfa"
