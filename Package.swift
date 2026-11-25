@@ -30,7 +30,7 @@ let package = Package(
             branch: "master"
         ),
         .package(
-            url: "https://github.com/leviouwendijk/Surfaces.git",
+            url: "https://github.com/swift-webc/Surfaces.git",
             branch: "master"
         ),
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
@@ -39,7 +39,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
         .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.0.0"),
         .package(
-            url: "https://github.com/leviouwendijk/Constructors.git",
+            url: "https://github.com/swift-webc/Constructors.git",
             branch: "master"
         ),
         .package(
